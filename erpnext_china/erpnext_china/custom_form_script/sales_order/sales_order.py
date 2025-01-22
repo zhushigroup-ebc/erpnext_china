@@ -78,7 +78,7 @@ class CustomSalesOrder(SalesOrder):
             custom_freight = frappe.db.get_value('Sales Order', self.custom_original_sales_order, 'custom_freight')
             self.custom_freight = custom_freight
 
-    def set_check_area(self, state, city, box_count = 0):
+    def set_check_area(self, state, city, box_count):
         def get_state(city):
             state_city_map = {
                 "南宁市": "广西壮族自治区",
@@ -96,28 +96,32 @@ class CustomSalesOrder(SalesOrder):
         second_level_states = ["广西壮族自治区", "海南省", "甘肃省", "云南省", "贵州省", "黑龙江省", "宁夏回族自治区"]
         # 二级偏远地区的省会城市
         second_level_capitals = ["南宁市", "海口市", "兰州市", "昆明市", "贵阳市", "哈尔滨市", "银川市"]
-        result = None
+        check_area = 0
+        result = 1
         if state in first_level_states:
-            result = 1
-        elif state in second_level_states:
-            if city in second_level_capitals and get_state(city) == state:
-                if box_count >= 3:  # 箱数为 3 箱（含）以上，按非偏远地区处理
-                    result = 0
-                else:
-                    result = 2
-            else:
-                result = 2
-        else:
+            check_area = 1
+            if city in second_level_capitals:
+                check_area = 2
+        if state in second_level_states:
+            check_area = 2
+
+        if (check_area == 0) or (check_area == 2 and box_count >= 3):
             result = 0
+        # 0代表可以包邮, 1代表不包邮
         return result
 
+
     def set_state_and_city(self):
+        box_count = 0
+        for d in self.get("items"):
+            if '箱' in d.uom and d.amount <= d.custom_after_distinct__amount_request:
+                box_count = box_count + d.qty
         if self.is_new() and self.shipping_address_name:
             address = frappe.db.get_value("Address", self.shipping_address_name, ["state", "city"], as_dict=True)
             if address:
                 self.custom_state = address.state
                 self.custom_city = address.city
-                self.custom_check_area = self.set_check_area(address.state,address.city)
+                self.custom_check_area = self.set_check_area(address.state,address.city,box_count)
 
     def set_discount_amount_custom_after_distinct__amount_request(self):
         discount_amount = 0
