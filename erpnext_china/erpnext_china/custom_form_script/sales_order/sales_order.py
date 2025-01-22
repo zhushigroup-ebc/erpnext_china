@@ -117,7 +117,7 @@ class CustomSalesOrder(SalesOrder):
             if address:
                 self.custom_state = address.state
                 self.custom_city = address.city
-                self.custom_city = check_area = self.set_check_area(address.state,address.city)
+                self.custom_check_area = self.set_check_area(address.state,address.city)
 
     def set_discount_amount_custom_after_distinct__amount_request(self):
         discount_amount = 0
