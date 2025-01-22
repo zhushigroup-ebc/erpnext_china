@@ -78,12 +78,46 @@ class CustomSalesOrder(SalesOrder):
             custom_freight = frappe.db.get_value('Sales Order', self.custom_original_sales_order, 'custom_freight')
             self.custom_freight = custom_freight
 
+    def set_check_area(self, state, city, box_count = 0):
+        def get_state(city):
+            state_city_map = {
+                "南宁市": "广西壮族自治区",
+                "海口市": "海南省",
+                "兰州市": "甘肃省",
+                "昆明市": "云南省",
+                "贵阳市": "贵州省",
+                "哈尔滨市": "黑龙江省",
+                "银川市": "宁夏回族自治区"
+            }
+            return state_city_map.get(city, None)
+        # 一级偏远地区
+        first_level_states = ["新疆维吾尔自治区", "西藏自治区", "内蒙古自治区", "青海省", "香港特别行政区", "澳门特别行政区", "台湾省"]
+        # 二级偏远地区
+        second_level_states = ["广西壮族自治区", "海南省", "甘肃省", "云南省", "贵州省", "黑龙江省", "宁夏回族自治区"]
+        # 二级偏远地区的省会城市
+        second_level_capitals = ["南宁市", "海口市", "兰州市", "昆明市", "贵阳市", "哈尔滨市", "银川市"]
+        result = None
+        if state in first_level_states:
+            result = 1
+        elif state in second_level_states:
+            if city in second_level_capitals and get_state(city) == state:
+                if box_count >= 3:  # 箱数为 3 箱（含）以上，按非偏远地区处理
+                    result = 0
+                else:
+                    result = 2
+            else:
+                result = 2
+        else:
+            result = 0
+        return result
+
     def set_state_and_city(self):
         if self.is_new() and self.shipping_address_name:
             address = frappe.db.get_value("Address", self.shipping_address_name, ["state", "city"], as_dict=True)
             if address:
                 self.custom_state = address.state
                 self.custom_city = address.city
+                self.custom_city = check_area = self.set_check_area(address.state,address.city)
 
     def set_discount_amount_custom_after_distinct__amount_request(self):
         discount_amount = 0
