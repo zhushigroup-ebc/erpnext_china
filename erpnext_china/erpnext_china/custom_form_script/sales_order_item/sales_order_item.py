@@ -25,3 +25,10 @@ class CustomSalesOrderItem(SalesOrderItem):
 			return self.stock_uom_rate * (self.custom_after_distinct__amount_request / self.amount)
 		except:
 			return 0
+
+	@property
+	def standard_rate(self):
+		try:
+			return f"{frappe.db.get_value('Item Price',{'item_code':self.item_code},'price_list_rate')}元/{frappe.db.get_value('Item Price',{'item_code':self.item_code},'uom')}"
+		except:
+			return 0
