@@ -135,12 +135,16 @@ class CustomSalesOrder(SalesOrder):
         for d in self.get("items"):
             discount_amount = discount_amount + (d.amount - d.custom_after_distinct__amount_request)
         self.discount_amount = discount_amount
-
+    def check_customer_and_internal_supplier(self):
+        for item in self.items:
+            if item.supplier in [self.customer_name, self.customer]:
+                frappe.throw(f"行 #{item.idx} 物料的内部供应商信息错误，请刷新后重建")
     def before_save(self):
         self.set_employee_and_department()
         self.set_freight()
         self.set_state_and_city()
         self.set_discount_amount_custom_after_distinct__amount_request()
+        self.check_customer_and_internal_supplier()
     def after_save(self):
         self.set_discount_amount_custom_after_distinct__amount_request()
 
