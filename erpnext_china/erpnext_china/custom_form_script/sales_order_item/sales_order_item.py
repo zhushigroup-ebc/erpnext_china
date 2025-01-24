@@ -27,7 +27,7 @@ class CustomSalesOrderItem(SalesOrderItem):
 			return 0
 
 	@property
-	def standard_rate(self):
+	def custom_standard_rate(self):
 		try:
 			return f"{frappe.db.get_value('Item Price',{'item_code':self.item_code},'price_list_rate')}元/{frappe.db.get_value('Item Price',{'item_code':self.item_code},'uom')}"
 		except:
