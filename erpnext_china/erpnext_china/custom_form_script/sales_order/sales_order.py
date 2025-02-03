@@ -68,9 +68,10 @@ class CustomSalesOrder(SalesOrder):
 
     def set_employee_and_department(self):
         if self.is_new():
-            employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, ["name", "department"], as_dict=1)
+            employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, ["name", "first_name", "department"], as_dict=1)
             if employee:
                 self.custom_employee = employee.name
+                self.custom_employee_name = employee.first_name
                 self.custom_department = employee.department
     
     def set_freight(self):
