@@ -51,6 +51,7 @@ override_doctype_class = {
     'Batch': 'erpnext_china.erpnext_china.custom_form_script.batch.batch.CustomBatch',
     'Sales Order':'erpnext_china.erpnext_china.custom_form_script.sales_order.sales_order.CustomSalesOrder',
 	'Sales Order Item': 'erpnext_china.erpnext_china.custom_form_script.sales_order_item.sales_order_item.CustomSalesOrderItem',
+    'Purchase Order':'erpnext_china.erpnext_china.custom_form_script.purchase_order.purchase_order.CustomPurchaseOrder',
 }
 
 doctype_js = {

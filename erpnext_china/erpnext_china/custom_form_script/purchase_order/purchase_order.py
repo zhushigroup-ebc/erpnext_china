@@ -2,6 +2,13 @@ import frappe
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_inter_company_transaction
 from frappe.share import add_docshare
 from frappe.permissions import get_role_permissions
+from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
+
+class CustomPurchaseOrder(PurchaseOrder):
+
+    # 取消父类中对schedule_date的验证
+	def validate_schedule_date(self):
+		pass
 
 def make_internal_sales_order(doc, method):
 	if frappe.db.get_single_value("Selling Settings", "allow_generate_inter_company_transactions"):

@@ -183,6 +183,10 @@ class CustomSalesOrder(SalesOrder):
         self.validate_taxes_and_charges_of_company()
         self.validate_user_can_sell_item()
 
+    # 取消父类中对delivery_date的验证
+    def validate_delivery_date(self):
+        pass
+
     def validate_taxes_and_charges_of_company(self):
         if self.company == '临时' and self.taxes_and_charges:
             frappe.throw('临时公司无需设置销项税/费')
