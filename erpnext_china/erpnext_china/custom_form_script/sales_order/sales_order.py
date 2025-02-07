@@ -14,7 +14,7 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
 )
 import frappe.utils
 from erpnext.selling.doctype.sales_order.sales_order import WarehouseRequired
-from frappe.utils import cint
+from frappe.utils import cint, getdate
 
 class CustomSalesOrder(SalesOrder):
 
@@ -183,9 +183,24 @@ class CustomSalesOrder(SalesOrder):
         self.validate_taxes_and_charges_of_company()
         self.validate_user_can_sell_item()
 
-    # 取消父类中对delivery_date的验证
     def validate_delivery_date(self):
-        pass
+        if self.order_type == "Sales" and not self.skip_delivery_note:
+            delivery_date_list = [d.delivery_date for d in self.get("items") if d.delivery_date]
+            max_delivery_date = max(delivery_date_list) if delivery_date_list else None
+            if (max_delivery_date and not self.delivery_date) or (
+                max_delivery_date and getdate(self.delivery_date) != getdate(max_delivery_date)
+            ):
+                self.delivery_date = max_delivery_date
+            if self.delivery_date:
+                for d in self.get("items"):
+                    if not d.delivery_date:
+                        d.delivery_date = self.delivery_date
+                    if getdate(self.transaction_date) > getdate(d.delivery_date):
+                        pass
+            else:
+                frappe.throw(_("Please enter Delivery Date"))
+
+        self.validate_sales_mntc_quotation()
 
     def validate_taxes_and_charges_of_company(self):
         if self.company == '临时' and self.taxes_and_charges:
