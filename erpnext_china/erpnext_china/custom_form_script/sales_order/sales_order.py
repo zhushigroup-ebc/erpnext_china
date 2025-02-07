@@ -235,7 +235,7 @@ class CustomSalesOrder(SalesOrder):
                     _("Delivery warehouse required for stock item {0}").format(d.item_code), WarehouseRequired
                 )
 
-            if d.stock_qty < 30 and not cint(d.delivered_by_supplier):
+            if d.stock_qty < 10 and not cint(d.delivered_by_supplier):
                 if '箱' in d.uom and d.qty >= 1:
                     return
                 else:
