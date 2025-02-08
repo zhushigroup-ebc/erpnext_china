@@ -249,12 +249,12 @@ class CustomSalesOrder(SalesOrder):
                 frappe.throw(
                     _("Delivery warehouse required for stock item {0}").format(d.item_code), WarehouseRequired
                 )
-            
 
+            item_group = frappe.db.get_all('Item', filters = {'name' : d.item_code },fields = 'item_group')[0]['item_group']
+            while item_group !='所有物料群组' and item_group not in ['日化美妆', '食品饮料', '有源设备'] :
+                item_group = frappe.db.get_all('Item Group', filters = {'name':item_group},fields = 'parent_item_group')[0]['parent_item_group']
+  
             if d.stock_qty < 10 and not cint(d.delivered_by_supplier) and item_group == '所有物料群组':
-                item_group = frappe.db.get_all('Item', filters = {'name':d.item_code},fields = 'item_group')[0]['item_group']
-                while item_group !='所有物料群组' and item_group not in ['日化美妆', '食品饮料', '有源设备'] :
-                    item_group = frappe.db.get_all('Item Group', filters = {'name':item_group},fields = 'parent_item_group')[0]['parent_item_group']
                 if '箱' in d.uom  and d.qty >= 1:
                     return
                 else:
