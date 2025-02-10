@@ -230,6 +230,18 @@ class CustomSalesOrder(SalesOrder):
         super().validate_warehouse()
         delivered_by_supplier = False
         delivered_by_company = False
+        
+        # 判断订单内产品是否由样品库发货，sample_warehouse为True时，由样品库发货
+        uom_tolal = 0
+        sample_warehouse = True
+        for d in self.get("items"):
+            if d.uom in ['盒','瓶','袋','套','贴']:
+                uom_total = uom_total + d.qty
+            if '箱' in d.uom:
+                sample_warehouse = False
+        if uom_tolal >30:
+            sample_warehouse = False
+
         for d in self.get("items"):
             if d.delivered_by_supplier:
                 delivered_by_supplier = True
@@ -250,10 +262,7 @@ class CustomSalesOrder(SalesOrder):
                     _("Delivery warehouse required for stock item {0}").format(d.item_code), WarehouseRequired
                 )
 
-
-            if d.stock_qty < 11 and not cint(d.delivered_by_supplier) :
-                if '箱' in d.uom  and d.qty >= 1:
-                    return
+            if sample_warehouse and not cint(d.delivered_by_supplier):
                 else:
                     uom_avilable = frappe.db.exists('UOM Conversion Detail',
                         {
