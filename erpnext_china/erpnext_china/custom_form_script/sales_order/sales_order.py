@@ -232,7 +232,7 @@ class CustomSalesOrder(SalesOrder):
         delivered_by_company = False
         
         # 判断订单内产品是否由样品库发货，sample_warehouse为True时，由样品库发货
-        uom_tolal = 0
+        uom_total = 0
         sample_warehouse = True
         for d in self.get("items"):
             if d.uom in ['盒','瓶','袋','套','贴']:
@@ -245,7 +245,7 @@ class CustomSalesOrder(SalesOrder):
             item_group = frappe.db.get_all('Item', filters = {'name' : d.item_code },fields = 'item_group')[0]['item_group']
             while item_group !='所有物料群组' and item_group not in ['有源设备'] :
                 item_group = frappe.db.get_all('Item Group', filters = {'name':item_group},fields = 'parent_item_group')[0]['parent_item_group']
-        if uom_tolal >30:
+        if uom_total >30:
             sample_warehouse = False
         if item_group != '所有物料群组':
             # 有源不从样品库发放
