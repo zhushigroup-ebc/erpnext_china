@@ -140,6 +140,11 @@ class CustomSalesOrder(SalesOrder):
         for item in self.items:
             if item.supplier in [self.customer_name, self.customer]:
                 frappe.throw(f"行 #{item.idx} 物料的内部供应商信息错误，请刷新后重建")
+    
+    def before_submit(self):
+        if self.has_value_changed("workflow_state") and self.workflow_state == 'Approved':
+            self.custom_approved_date = frappe.utils.today()
+
     def before_save(self):
         self.set_employee_and_department()
         self.set_freight()
@@ -402,7 +407,7 @@ def validate_po_item_price(po,so):
 def set_custom_important_reminders(docname, note):
     doc = frappe.get_doc('Sales Order', docname)
     doc.custom_important_reminders = note
-    doc.add_comment("Comment", f'添加备注：{note}')
+    doc.add_comment("Comment", f'{note}')
     doc.save(ignore_permissions=True)
     
 
