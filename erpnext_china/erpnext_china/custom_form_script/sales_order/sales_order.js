@@ -45,6 +45,12 @@ frappe.ui.form.on('Sales Order', {
         //         __("Create")
         //     )
         // }
+
+        // 添加按钮，写备注（custom_important_reminders）
+        frm.add_custom_button(
+            __("Add Important Reminders"),
+            ()=> frm.events.add_custom_important_reminders(frm),
+        )
     },
     select_payment_entry(frm) {
         const handleFieldOnChange = ()=>{
@@ -328,6 +334,33 @@ frappe.ui.form.on('Sales Order', {
     create_customer_payment_confirmation(frm) {
         frm.sales_order = frm.docname
         frm.make_new("Customer Payment Confirmation")
+    },
+
+    add_custom_important_reminders(frm) {
+        const dialog = new frappe.ui.Dialog({
+			title: __("Add Important Reminders"),
+			fields: [
+				{
+					fieldname: "important_reminders",
+					fieldtype: "Text",
+					label: __("Important Reminders"),
+				},
+				
+			],
+            primary_action_label: __("Save"),
+			primary_action: () => {
+                const custom_important_reminders = dialog.get_value("important_reminders");
+                frappe.call('erpnext_china.erpnext_china.custom_form_script.sales_order.sales_order.set_custom_important_reminders', 
+                    {"note": custom_important_reminders, "docname": frm.doc.name}
+                )
+                .then(r => {
+                    frappe.msgprint("备注添加成功！")
+                    console.log(r)
+                })
+                dialog.hide();
+			},
+        });
+		dialog.show();
     }
 })
 

@@ -399,6 +399,14 @@ def validate_po_item_price(po,so):
             po.discount_amount = so.discount_amount
 
 @frappe.whitelist()
+def set_custom_important_reminders(docname, note):
+    doc = frappe.get_doc('Sales Order', docname)
+    doc.custom_important_reminders = note
+    doc.add_comment("Comment", f'添加备注：{note}')
+    doc.save(ignore_permissions=True)
+    
+
+@frappe.whitelist()
 def matching_payment_entries(docname,payment_entries):
     doc = frappe.get_doc('Sales Order',docname)
     if isinstance(payment_entries,str):
