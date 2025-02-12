@@ -258,10 +258,6 @@ class CustomSalesOrder(SalesOrder):
 
 
         for d in self.get("items"):
-            if d.delivered_by_supplier:
-                delivered_by_supplier = True
-            else:
-                delivered_by_company = True
             if (
                 (
                     frappe.get_cached_value("Item", d.item_code, "is_stock_item") == 1
@@ -336,8 +332,6 @@ class CustomSalesOrder(SalesOrder):
                         frappe.bold(d.stock_qty),
                     )
                     frappe.throw(msg,title=_('Error'))
-        if delivered_by_supplier and delivered_by_company:
-            frappe.throw(_("Cannot deliver both by supplier and company in same sales order"))
 def get_employee_all_leaders(employee, leaders=None):
     if leaders is None:
         leaders = []
