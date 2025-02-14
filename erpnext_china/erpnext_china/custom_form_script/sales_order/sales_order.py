@@ -117,7 +117,7 @@ class CustomSalesOrder(SalesOrder):
         for d in self.get("items"):
             if '箱' in d.uom and d.amount <= d.custom_after_distinct__amount_request:
                 box_count = box_count + d.qty
-        if self.is_new() and self.shipping_address_name:
+        if self.has_value_changed("shipping_address_name") and self.shipping_address_name:
             address = frappe.db.get_value("Address", self.shipping_address_name, ["state", "city"], as_dict=True)
             if address:
                 self.custom_state = address.state
