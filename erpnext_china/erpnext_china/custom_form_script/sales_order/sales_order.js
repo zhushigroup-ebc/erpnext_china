@@ -10,6 +10,12 @@ frappe.ui.form.on('Sales Order', {
 			}
 		};
 	},
+    custom_immediate_shipping_after_approval: function(frm) {
+        if (!frm.doc.custom_immediate_shipping_after_approval) {
+            frm.set_value("custom_printed_delivery_note", 0)
+            frm.set_value("custom_printed_packing_list", 0)
+        }
+    },
     refresh(frm){
         
         // 设置子表字段的筛选条件
