@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_inter_company_transaction
 from frappe.share import add_docshare
 from frappe.permissions import get_role_permissions
@@ -16,8 +17,15 @@ def make_internal_sales_order(doc, method):
 		frappe.set_user("Administrator")
 		sales_order = make_inter_company_transaction('Purchase Order',doc.name,target_doc=None)
 		validate_delivery_date(sales_order,doc)
-		sales_order.save().submit()
-		sales_order.db_set('owner',doc.owner)
+		try:
+			sales_order.save().submit()
+			sales_order.db_set('owner',doc.owner)
+		except Exception as e:
+			msg = _('Make Inter Company Sales Order Failed','zh')
+			frappe.log_error(frappe.get_traceback(),_('Make Inter Company Sales Order Failed'))
+			frappe.set_user(current_user)
+			frappe.msgprint(msg,alert=1)
+			return
 
 		role_permissions = get_role_permissions(frappe.get_meta(sales_order.doctype), current_user)
 		add_docshare(
