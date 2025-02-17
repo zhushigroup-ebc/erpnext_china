@@ -6,6 +6,14 @@
             <span>2、微信是否通过。</span>
             <span>3、线索有效/无效情况详细说明。</span>
         </div>
+        <!-- 期望回访时间段 -->
+        <div class="revisit">
+            <div class="revisit-title">请尽快回访，避免错过商机</div>
+            <div class="revisit-create-date"></div>
+            <div class="revisit-time-box">
+                
+            </div>
+        </div>
     </div>
     {% if (!frappe.pages.Lead.frm.docname || frappe.pages.Lead.frm.doc.custom_sea == '私海') { %}
     <div class="new-btn pb-3">
@@ -88,5 +96,136 @@
 
     .notes-section .btn {
         padding: 0.2rem 0.2rem;
+    }
+
+    .revisit-title {
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    .revisit-time-box {
+        display: flex;
+        justify-content: space-around;
+    }
+    .revisit-create-date {
+        margin: 5px 0;
+    }
+    .time-box-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+    }
+
+    .time-body {
+        text-align: center;
+    }
+    .time-description {
+        max-width: 120px;
+        text-align: center;
+    }
+
+    .times {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .time-num {
+        background-color:  #f1f0f0;
+        color: #aaaaaa;
+        border-radius: 50%;
+        font-size: 18px;
+        font-weight: bold;
+        width: 35px;
+        height: 35px;
+        text-align: center;
+        line-height: 35px;
+        margin: 5px 0;
+    }
+    .time-title {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
+    .time-title::after {
+        content: "";
+        position: absolute;
+        bottom: 20px;
+        left: 100%;
+        transform: translateX(-50%);
+        width: 50%;
+        height: 3px;
+        background-color: #e4e5e6;
+    }
+    .last::after {
+        display: none;
+    }
+    .expired-bg-color {
+        background-color: #f5f54b;
+        color: #dbb004;
+    }
+    .success-bg-color {
+        background-color: #4e6ef2;
+        color: white;
+    }
+
+    @media screen and (max-width: 567px) {
+        .revisit-time-box {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+        }
+
+        .time-num {
+            border: 1px solid #f1f0f0;
+            font-weight: 500;
+            border-radius: 50%;
+            font-size: 14px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            margin-right: 5px;
+            position: relative;
+        }
+        .time-title {
+            width: auto;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        .time-title::after {
+            content: "";
+            position: absolute;
+            top: 35px;
+            left: 15px;
+            width: 3px;
+            height: 100%;
+            background-color: #e4e5e6;
+        }
+        .revisit-create-date {
+            font-size: 12px;
+        }
+        .time-body {
+            text-align: start;
+        }
+        .times {
+            font-size: 12px;
+            display: inline-block;
+            height: 25px;
+            line-height: 25px;
+        }
+
+        .time-description {
+            text-align: start;
+            max-width: none;
+            font-size: 12px;
+        }
+
+        .time-box-item {
+            display: flex;
+            flex-direction: row;
+            align-items: self-start;
+        }
     }
 </style>
