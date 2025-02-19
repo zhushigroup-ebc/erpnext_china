@@ -75,7 +75,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-14 17:26:12.551430",
+ "modified": "2025-02-19 16:53:50.250575",
  "modified_by": "Administrator",
  "module": "ERPNext China",
  "name": "Auto Allocation Rule",
@@ -97,5 +97,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }
