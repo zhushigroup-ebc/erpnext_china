@@ -33,6 +33,8 @@ class CustomSalesOrder(SalesOrder):
                 fields=['parent as item_code','company','default_warehouse']
             )
         for item in self.items:
+            if not item.is_stock_item:
+                continue
             company_warehouse = [d.default_warehouse for d in default_warehouse_list if d.company == self.company and d.item_code==item.item_code]
             if len(company_warehouse) == 0:
                 shipping_company = [d.company for d in default_warehouse_list if d.company != self.company and d.item_code==item.item_code]
