@@ -242,7 +242,7 @@ class CustomSalesOrder(SalesOrder):
         uom_total = 0
         sample_warehouse = True
         for d in self.get("items"):
-            if d.uom in ['盒','瓶','袋','套','贴']:
+            if d.uom in ['盒','瓶','袋','套','贴','片','支','卷','个','包','只','副']:
                 uom_total = uom_total + d.qty
             if '箱' in d.uom:
                 sample_warehouse = False
