@@ -254,7 +254,7 @@ class CustomSalesOrder(SalesOrder):
                 item_group = frappe.db.get_all('Item Group', filters = {'name':item_group},fields = 'parent_item_group')[0]['parent_item_group']
         if uom_total >30:
             sample_warehouse = False
-        if item_group != '所有物料群组':
+        if item_group == '有源设备':
             # 有源不从样品库发放
             sample_warehouse = False
 
