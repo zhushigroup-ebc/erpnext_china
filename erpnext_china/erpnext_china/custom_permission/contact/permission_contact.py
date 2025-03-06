@@ -27,10 +27,10 @@ def has_query_permission(user):
 		conditions = f"(tabContact.owner in {users_str})" 
 
 		# 上级也可以看到下级拥有联系人关联客户单据权限的联系人
-		contacts = get_contacts(users, 'read')
-		if len(contacts) > 0:
-			contacts_str = str(tuple(contacts)).replace(',)',')')
-			conditions += f"or (tabContact.name in {contacts_str})"
+		# contacts = get_contacts(users, 'read')
+		# if len(contacts) > 0:
+		# 	contacts_str = str(tuple(contacts)).replace(',)',')')
+		# 	conditions += f"or (tabContact.name in {contacts_str})"
 	return conditions
 
 def has_permission(doc, user, permission_type=None):
@@ -41,8 +41,8 @@ def has_permission(doc, user, permission_type=None):
 		users = get_employee_tree(parent=user)
 		users.append(user)
 
-		contacts = get_contacts(users, 'write')
-		if (doc.owner in users) or (doc.name in contacts):
+		# contacts = get_contacts(users, 'write')
+		if doc.owner in users:
 			return True
 		else:
 			return False
