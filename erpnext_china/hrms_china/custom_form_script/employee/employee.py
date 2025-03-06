@@ -178,7 +178,7 @@ def scheduled_tasks_employee_children():
 		df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
 
 		cache.set('hrms_employee_children', df.to_json())
-		
+
 	if frappe.cache.get('hrms_employee_children') != None:
 		last_dt=frappe.db.get_all('Employee',fields = ['max(modified) as max_dt'],as_list=True)[0][0]
 		df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
