@@ -6,6 +6,7 @@ from erpnext.setup.doctype.employee.employee import *
 from datetime import datetime
 import json
 from pathlib import Path
+import pandas as pd
 
 class CustomEmployee(Employee):
 	def validate(self):
@@ -104,16 +105,15 @@ class CustomEmployee(Employee):
 			frappe.throw('薪资构成项不可重复！')
 
 @frappe.whitelist()
-def get_employee_tree(parent = None, 
+def get_employee_tree(parent, 
 					pluck = 'email',
 					orient = 'list',
 					levle = None,
 					is_root = None,
 					use_cache = False,
 					has_parent = False):
-	
 	'''
-	注意：io压力增加时添加从缓存中读取的代码
+	注意：io压力增加时进一步优化缓存缓存内容
 
 	parent: default None
 		用户唯一标识的类型，可以输入str或dict
@@ -129,41 +129,54 @@ def get_employee_tree(parent = None,
 
 	is_root: False
 	'''
+	users = []
 	if is_root:
 		# 树的最顶点
-		employee = 'HR-EMP-00002'
-	elif '@' in parent:
-		# 邮箱地址拿第一个员工编号
-		filters = {'user_id': parent, 'status': 'Active'}
-		employee = frappe.get_all('Employee',filters=filters,pluck='employee')
-		employee = employee[0]
-	else:
-		employee = parent
+		employee = 'zhukunfu@zhushigroup.cn'
 
-	# 递归函数来获取下级employee
-	def get_subordinates(employee):
-		subordinates = []
-
-		filters = {'reports_to': employee,
-				'status': 'Active'}
-		employees = frappe.get_all('Employee',filters=filters,pluck='employee')
-		if employees:
-			for i in employees:
-				subordinates.append(i)
-				subordinates += get_subordinates(i)
-		return subordinates
+	frappe.cache.get('hrms_employee_children')
 	
-	subordinates = get_subordinates(employee)
-	
-	if (pluck == 'email') and (orient == 'list'):
-		# 返回email的列表
-		filters = {'employee': ['in',subordinates],
-				'status': 'Active'}
-		subordinates = frappe.get_all('Employee',filters=filters,pluck='user_id')
+	df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
+	reports_to_user_columns = ['reports_to_user_5','reports_to_user_4','reports_to_user_3','reports_to_user_2','reports_to_user']
+	for col in reports_to_user_columns:
+		if sum(df[col]==parent)>0:
+			users = df.user_id[(df[col]==parent)&(~df['user_id'].isna())].drop_duplicates().to_list()
+			break	
+	return users
 
-	subordinates = [x for x in subordinates if x] # 去除空值
 
-	if has_parent == True and pluck == 'email':
-		subordinates.append(parent)
+def scheduled_tasks_employee_children():
+    import frappe
+    cache = frappe.cache()
+    import pandas as pd
+    import numpy as np
 
-	return subordinates
+    column_name = ['name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to']
+    data = frappe.db.get_all('Employee',fields = column_name,as_list=True)
+    df = pd.DataFrame(data,columns=['name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to'])
+
+    df.replace('[NULL]',np.nan,inplace=True)
+    reports_to_dict = dict(zip(df.name.to_list(),df.reports_to.to_list()))
+    emp_for_user_dict = dict(zip(df.name.to_list(),df.user_id.to_list()))
+
+    df['reports_to'] = df.reports_to.fillna(df.name)
+
+    df['reports_to_2'] = df.reports_to.map(reports_to_dict)
+    df['reports_to_2'] = df.reports_to_2.fillna(df.reports_to)
+
+    df['reports_to_3'] = df.reports_to_2.map(reports_to_dict)
+    df['reports_to_3'] = df.reports_to_3.fillna(df.reports_to_2)
+
+    df['reports_to_4'] = df.reports_to_3.map(reports_to_dict)
+    df['reports_to_4'] = df.reports_to_4.fillna(df.reports_to_3)
+
+    df['reports_to_5'] = df.reports_to_4.map(reports_to_dict)
+    df['reports_to_5'] = df.reports_to_5.fillna(df.reports_to_4)
+
+    df['reports_to_user'] = df.reports_to.map(emp_for_user_dict)
+    df['reports_to_user_2'] = df.reports_to_2.map(emp_for_user_dict)
+    df['reports_to_user_3'] = df.reports_to_3.map(emp_for_user_dict)
+    df['reports_to_user_4'] = df.reports_to_4.map(emp_for_user_dict)
+    df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
+
+    cache.set('hrms_employee_children', df.to_json())
