@@ -133,8 +133,6 @@ def get_employee_tree(parent,
 	if is_root:
 		# 树的最顶点
 		employee = 'zhukunfu@zhushigroup.cn'
-
-	frappe.cache.get('hrms_employee_children')
 	
 	df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
 	reports_to_user_columns = ['reports_to_user_5','reports_to_user_4','reports_to_user_3','reports_to_user_2','reports_to_user']
@@ -146,14 +144,20 @@ def get_employee_tree(parent,
 
 
 def scheduled_tasks_employee_children():
-    import frappe
+    import frappe,datetime
     cache = frappe.cache()
     import pandas as pd
     import numpy as np
 
-    column_name = ['name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to']
+	last_dt=frappe.db.get_all('Employee',fields = ['max(modified) as max_dt'],as_list=True)[0][0]
+    df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
+	cache_dt = datetime.datetime.fromtimestamp(df.modified.max()/1000)
+	dt_diff = (last_dt - cache_dt)
+	if dt_diff.seconds <20:
+		break
+	column_name = ['modified','name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to']
     data = frappe.db.get_all('Employee',fields = column_name,as_list=True)
-    df = pd.DataFrame(data,columns=['name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to'])
+    df = pd.DataFrame(data,columns=column_name)
 
     df.replace('[NULL]',np.nan,inplace=True)
     reports_to_dict = dict(zip(df.name.to_list(),df.reports_to.to_list()))
