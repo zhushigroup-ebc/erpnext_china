@@ -148,39 +148,42 @@ def scheduled_tasks_employee_children():
     cache = frappe.cache()
     import pandas as pd
     import numpy as np
+	def run():
+		column_name = ['modified','name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to']
+		data = frappe.db.get_all('Employee',fields = column_name,as_list=True)
+		df = pd.DataFrame(data,columns=column_name)
 
-	last_dt=frappe.db.get_all('Employee',fields = ['max(modified) as max_dt'],as_list=True)[0][0]
-    df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
-	cache_dt = datetime.datetime.fromtimestamp(df.modified.max()/1000)
-	dt_diff = (last_dt - cache_dt)
-	if dt_diff.seconds <20:
-		break
-	column_name = ['modified','name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to']
-    data = frappe.db.get_all('Employee',fields = column_name,as_list=True)
-    df = pd.DataFrame(data,columns=column_name)
+		df.replace('[NULL]',np.nan,inplace=True)
+		reports_to_dict = dict(zip(df.name.to_list(),df.reports_to.to_list()))
+		emp_for_user_dict = dict(zip(df.name.to_list(),df.user_id.to_list()))
 
-    df.replace('[NULL]',np.nan,inplace=True)
-    reports_to_dict = dict(zip(df.name.to_list(),df.reports_to.to_list()))
-    emp_for_user_dict = dict(zip(df.name.to_list(),df.user_id.to_list()))
+		df['reports_to'] = df.reports_to.fillna(df.name)
 
-    df['reports_to'] = df.reports_to.fillna(df.name)
+		df['reports_to_2'] = df.reports_to.map(reports_to_dict)
+		df['reports_to_2'] = df.reports_to_2.fillna(df.reports_to)
 
-    df['reports_to_2'] = df.reports_to.map(reports_to_dict)
-    df['reports_to_2'] = df.reports_to_2.fillna(df.reports_to)
+		df['reports_to_3'] = df.reports_to_2.map(reports_to_dict)
+		df['reports_to_3'] = df.reports_to_3.fillna(df.reports_to_2)
 
-    df['reports_to_3'] = df.reports_to_2.map(reports_to_dict)
-    df['reports_to_3'] = df.reports_to_3.fillna(df.reports_to_2)
+		df['reports_to_4'] = df.reports_to_3.map(reports_to_dict)
+		df['reports_to_4'] = df.reports_to_4.fillna(df.reports_to_3)
 
-    df['reports_to_4'] = df.reports_to_3.map(reports_to_dict)
-    df['reports_to_4'] = df.reports_to_4.fillna(df.reports_to_3)
+		df['reports_to_5'] = df.reports_to_4.map(reports_to_dict)
+		df['reports_to_5'] = df.reports_to_5.fillna(df.reports_to_4)
 
-    df['reports_to_5'] = df.reports_to_4.map(reports_to_dict)
-    df['reports_to_5'] = df.reports_to_5.fillna(df.reports_to_4)
+		df['reports_to_user'] = df.reports_to.map(emp_for_user_dict)
+		df['reports_to_user_2'] = df.reports_to_2.map(emp_for_user_dict)
+		df['reports_to_user_3'] = df.reports_to_3.map(emp_for_user_dict)
+		df['reports_to_user_4'] = df.reports_to_4.map(emp_for_user_dict)
+		df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
 
-    df['reports_to_user'] = df.reports_to.map(emp_for_user_dict)
-    df['reports_to_user_2'] = df.reports_to_2.map(emp_for_user_dict)
-    df['reports_to_user_3'] = df.reports_to_3.map(emp_for_user_dict)
-    df['reports_to_user_4'] = df.reports_to_4.map(emp_for_user_dict)
-    df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
-
-    cache.set('hrms_employee_children', df.to_json())
+		cache.set('hrms_employee_children', df.to_json())
+		
+	if frappe.cache.get('hrms_employee_children') != None:
+		last_dt=frappe.db.get_all('Employee',fields = ['max(modified) as max_dt'],as_list=True)[0][0]
+		df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
+		cache_dt = datetime.datetime.fromtimestamp(df.modified.max()/1000)
+		dt_diff = (last_dt - cache_dt)
+		if dt_diff.seconds <20:
+			break
+	run()
