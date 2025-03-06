@@ -185,5 +185,5 @@ def scheduled_tasks_employee_children():
         cache_dt = datetime.datetime.fromtimestamp(df.modified.max()/1000)
         dt_diff = (last_dt - cache_dt)
         if dt_diff.seconds <20:
-            break
+            return 
     run()
