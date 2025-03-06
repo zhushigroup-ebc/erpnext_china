@@ -103,46 +103,6 @@ class CustomEmployee(Employee):
 	def validate_unique_salary_component_item(self):
 		if self.has_duplicates():
 			frappe.throw('薪资构成项不可重复！')
-
-@frappe.whitelist()
-def get_employee_tree(parent, 
-					pluck = 'email',
-					orient = 'list',
-					levle = None,
-					is_root = None,
-					use_cache = False,
-					has_parent = False):
-	'''
-	注意：io压力增加时进一步优化缓存缓存内容
-
-	parent: default None
-		用户唯一标识的类型，可以输入str或dict
-		key: email|userid|username
-		value: 唯一标识的值
-
-	pluck: default 'email' 返回的字段名
-		email|userid|username
-
-	orient: list|dict , 是否返回树状结构
-
-	levle: all|int ,返回多少层级的信息
-
-	is_root: False
-	'''
-	users = []
-	if is_root:
-		# 树的最顶点
-		employee = 'zhukunfu@zhushigroup.cn'
-	
-	df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
-	reports_to_user_columns = ['reports_to_user_5','reports_to_user_4','reports_to_user_3','reports_to_user_2','reports_to_user']
-	for col in reports_to_user_columns:
-		if sum(df[col]==parent)>0:
-			users = df.user_id[(df[col]==parent)&(~df['user_id'].isna())].drop_duplicates().to_list()
-			break	
-	return users
-
-
 def scheduled_tasks_employee_children():
     import frappe,datetime
     cache = frappe.cache()
@@ -187,3 +147,44 @@ def scheduled_tasks_employee_children():
         if dt_diff.seconds <20:
             return 
     run()
+
+@frappe.whitelist()
+def get_employee_tree(parent, 
+                    pluck = 'email',
+                    orient = 'list',
+                    levle = None,
+                    is_root = None,
+                    use_cache = False,
+                    has_parent = False):
+    '''
+	注意：io压力增加时进一步优化缓存缓存内容
+
+	parent: default None
+		用户唯一标识的类型，可以输入str或dict
+		key: email|userid|username
+		value: 唯一标识的值
+
+	pluck: default 'email' 返回的字段名
+		email|userid|username
+
+	orient: list|dict , 是否返回树状结构
+
+	levle: all|int ,返回多少层级的信息
+
+	is_root: False
+    '''
+    users = []
+    if is_root:
+        # 树的最顶点
+        employee = 'zhukunfu@zhushigroup.cn'
+    try:
+        df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
+    except:
+        scheduled_tasks_employee_children()
+        df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
+
+    reports_to_user_columns = ['reports_to_user_5','reports_to_user_4','reports_to_user_3','reports_to_user_2','reports_to_user']
+    for col in reports_to_user_columns:
+        if sum(df[col]==parent)>0:
+            users = df.user_id[(df[col]==parent)&(~df['user_id'].isna())].drop_duplicates().to_list()
+    return users
