@@ -150,13 +150,19 @@ def check_lead_total_limit(employee: str) -> bool:
 	:param employee: 线索负责员工
 
 	"""
-	custom_lead_total = frappe.db.get_value("Employee", employee, fieldname="custom_lead_total") or 0
+	employee_dict = frappe.db.get_value("Employee", employee, ["custom_lead_total", "user_id"], as_dict=True)
+	if not employee_dict:
+		return False
+	if employee_dict.user_id:
+		online_state = frappe.db.get_value("User", employee_dict.user_id, "online_state")
+		if online_state != "Online":
+			frappe.throw("当前用户处于离线状态，请分配给其它用户！")
 	count = frappe.db.count("Lead", {
 		"custom_lead_owner_employee": employee,
 		"status": ["!=", "Converted"],
 		"source": ["!=", "业务自录入"]
 	})
-	if count >= custom_lead_total:
+	if count >= (employee_dict.custom_lead_total or 0):
 		return False
 	return True
 
