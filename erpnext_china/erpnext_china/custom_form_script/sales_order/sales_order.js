@@ -53,10 +53,12 @@ frappe.ui.form.on('Sales Order', {
         // }
 
         // 添加按钮，写备注（custom_important_reminders）
-        frm.add_custom_button(
-            __("Add Important Reminders"),
-            ()=> frm.events.add_custom_important_reminders(frm),
-        )
+        if (frappe.user.has_role('销售会计') || frappe.user.has_role('销售支持')){
+            frm.add_custom_button(
+                __("Add Important Reminders"),
+                ()=> frm.events.add_custom_important_reminders(frm),
+            )
+        }
     },
     select_payment_entry(frm) {
         const handleFieldOnChange = ()=>{
