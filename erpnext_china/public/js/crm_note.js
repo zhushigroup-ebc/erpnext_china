@@ -188,7 +188,7 @@ function expand_notes_html(frm, wrapper) {
                 </div>
                 <div class="time-body">
                     <div class="times">${times}</div>
-                    <div class="time-description">请在${expectedDatetime}前完成</div>
+                    <p class="time-description">请在${expectedDatetime}前完成</p>
                 </div>
             </div>`
         revisitTimeBoxHtml = revisitTimeBoxHtml + timeBoxItem

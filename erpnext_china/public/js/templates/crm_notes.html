@@ -1,24 +1,10 @@
 <div class="notes-section col-xs-12">
     <div>
-        <div style="font-size: 15px; font-weight: bold;">销售反馈说明：</div>
-        <div style="margin-bottom: 10px;display: flex; flex-direction: column;">
-            <span>1、电话是否打通。</span>
-            <span>2、微信是否通过。</span>
-            <span>3、线索有效/无效情况详细说明。</span>
-        </div>
-        <div style="font-size: 15px; font-weight: bold;">线索跟进不及时惩罚机制：</div>
-        <div style="margin-bottom: 10px;display: flex; flex-direction: column;">
-            <span>每晚22:00进行线索跟进时间分析</span>
-            <span>1、昨日8:00-昨日21:00之间的线索，如果在分配后36分钟内未及时跟进，则暂停自动分配线索7天。</span>
-            <span>2、昨日21:00-今日8:00之间的线索，（凌晨线索客户极大可能在睡觉，建议大家先加微信，ebc备注添加微信，十点左右再打电话）如果在分配后至今日11:00仍未跟进，则暂停自动分配线索7天。</span>
-        </div>
-        <!-- 期望回访时间段 -->
-        <div class="revisit">
-            <div class="revisit-title">请尽快回访，避免错过商机</div>
-            <div class="revisit-create-date"></div>
-            <div class="revisit-time-box">
-                
-            </div>
+        <div class="title">线索跟进不及时惩罚机制：</div>
+        <div class="content">
+            <p>每晚22:00进行线索跟进时间分析</p>
+            <p>1、昨日8:00-昨日21:00之间的线索，如果在分配后36分钟内未及时跟进，则暂停自动分配线索7天。</p>
+            <p>2、昨日21:00-今日8:00之间的线索，（凌晨线索客户极大可能在睡觉，建议大家先加微信，ebc备注添加微信，十点左右再打电话）如果在分配后至今日11:00仍未跟进，则暂停自动分配线索7天。</p>
         </div>
     </div>
     {% if (!frappe.pages.Lead.frm.docname || frappe.pages.Lead.frm.doc.custom_sea == '私海') { %}
@@ -30,13 +16,12 @@
             {{ __("New Note") }}
         </button>
     </div>
-    
+
     {% } %}
     <div class="all-notes">
         {% if (notes.length) { %}
-        {% for(var i=0, l=notes.length; i<l; i++) { %} 
-        {% if (['销售反馈', '客服反馈', '网推反馈'].includes(notes[i].custom_note_type)) { %}
-        <div class="comment-content p-3 row" name="{{ notes[i].name }}">
+        {% for(var i=0, l=notes.length; i<l; i++) { %} {% if (['销售反馈', '客服反馈' , '网推反馈'
+            ].includes(notes[i].custom_note_type)) { %} <div class="comment-content p-3 row" name="{{ notes[i].name }}">
             <div class="mb-2 head col-xs-3">
                 {% if (notes[i].added_by && notes[i].added_on) %}
                 <div class="row">
@@ -68,17 +53,51 @@
                             </span>
                         {% } %} -->
             </div>
-    
-        </div>
-        {% } %}
-    
-        {% } %}
-        {% } else { %}
-        <div class="no-activity text-muted pt-6">
-            {{ __("No Notes") }}
-        </div>
-        {% } %}
+
     </div>
+    {% } %}
+
+    {% } %}
+    {% } else { %}
+    <div class="no-activity text-muted pt-6">
+        {{ __("No Notes") }}
+    </div>
+    {% } %}
+</div>
+
+<!-- 期望回访时间段 -->
+<div class="revisit">
+    <div class="revisit-title" style="display: none;">请尽快回访，避免错过商机</div>
+    <div class="revisit-create-date" style="display: none;"></div>
+    <div class="revisit-time-box">
+
+    </div>
+</div>
+
+<div class="title">贴剂类分配规则（每天约1.3轮）</div>
+<div class="content">
+    <p>1、近3个月均新客户业绩达到盈亏平衡点（3000元）；</p>
+    <p>2、销售人员近半年新入职的新员工，每轮增加1条线索；</p>
+    <p>3、近3个月均新客户业绩>=15000元，每轮增加2条贴剂线索 或 每轮增加1条贴剂线索 和3条左右食品等其他品类线索；</p>
+</div>
+
+<div class="title">食品、化妆品、印务、牙膏规则</div>
+<div class="content">
+    <p>单独拉群，联动转化数据对转化差的人员进行剔除</p>
+</div>
+
+<div class="title">其它说明</div>
+<div class="content">
+    <p>1、跟进不及时处理：系统检测月内发生第2次半小时内未跟进，停分线索一周，连续停分超过2次，停分线索一个月。（账户改为离线状态将停止接收线索，避免跟进不及时）</p>
+    <p>2、转化率低处理：每月联动转化数据对转化差的人员进行剔除和降权。</p>
+</div>
+
+<div class="title">销售反馈说明</div>
+<div class="content">
+    <p>1、电话是否打通。</p>
+    <p>2、微信是否通过。</p>
+    <p>3、线索有效/无效情况详细说明。</p>
+</div>
 </div>
 
 <style>
@@ -103,6 +122,20 @@
     .notes-section .btn {
         padding: 0.2rem 0.2rem;
     }
+    .title {
+        font-size: 15px; 
+        font-weight: bold;
+    }
+    .content {
+        margin: 10px 0;
+        display: flex; 
+        flex-direction: column;
+    }
+    .revisit {
+        margin: 45px 0;
+        padding-bottom: 30px;
+        border-bottom: 1px solid var(--scrollbar-track-color);
+    }
 
     .revisit-title {
         font-size: 15px;
@@ -113,9 +146,11 @@
         display: flex;
         justify-content: space-around;
     }
+
     .revisit-create-date {
         margin: 5px 0;
     }
+
     .time-box-item {
         display: flex;
         flex-direction: column;
@@ -126,6 +161,7 @@
     .time-body {
         text-align: center;
     }
+
     .time-description {
         max-width: 120px;
         text-align: center;
@@ -137,7 +173,7 @@
     }
 
     .time-num {
-        background-color:  #f1f0f0;
+        background-color: #f1f0f0;
         color: #aaaaaa;
         border-radius: 50%;
         font-size: 18px;
@@ -148,12 +184,14 @@
         line-height: 35px;
         margin: 5px 0;
     }
+
     .time-title {
         width: 100%;
         display: flex;
         justify-content: center;
         position: relative;
     }
+
     .time-title::after {
         content: "";
         position: absolute;
@@ -164,13 +202,16 @@
         height: 3px;
         background-color: #e4e5e6;
     }
+
     .last::after {
         display: none;
     }
+
     .expired-bg-color {
-        background-color: #f5f54b;
-        color: #dbb004;
+        background-color: #ecec49;
+        color: #e17414;
     }
+
     .success-bg-color {
         background-color: #4e6ef2;
         color: white;
@@ -184,37 +225,41 @@
         }
 
         .time-num {
-            border: 1px solid #f1f0f0;
-            font-weight: 500;
+            font-weight: 400;
             border-radius: 50%;
-            font-size: 14px;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
+            font-size: 15px;
+            width: 28px;
+            height: 28px;
+            line-height: 28px;
             margin-right: 5px;
             position: relative;
         }
+
         .time-title {
             width: auto;
             display: flex;
             justify-content: center;
             position: relative;
         }
+
         .time-title::after {
             content: "";
             position: absolute;
-            top: 35px;
+            top: 33px;
             left: 15px;
-            width: 3px;
+            width: 2px;
             height: 100%;
-            background-color: #e4e5e6;
+            background-color: var(--scrollbar-thumb-color);
         }
+
         .revisit-create-date {
             font-size: 12px;
         }
+
         .time-body {
             text-align: start;
         }
+
         .times {
             font-size: 12px;
             display: inline-block;
