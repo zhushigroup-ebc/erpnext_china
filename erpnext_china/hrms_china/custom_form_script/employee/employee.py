@@ -113,31 +113,31 @@ def scheduled_tasks_employee_children():
         data = frappe.db.get_all('Employee',fields = column_name,as_list=True)
         df = pd.DataFrame(data,columns=column_name)
 
-		df.replace('[NULL]',np.nan,inplace=True)
-		df['reports_to'] = df.reports_to.fillna(df.name)
-		reports_to_dict = dict(zip(df.name.to_list(),df.reports_to.to_list()))
-		emp_for_user_dict = dict(zip(df.name.to_list(),df.user_id.to_list()))
+        df.replace('[NULL]',np.nan,inplace=True)
+        df['reports_to'] = df.reports_to.fillna(df.name)
+        reports_to_dict = dict(zip(df.name.to_list(),df.reports_to.to_list()))
+        emp_for_user_dict = dict(zip(df.name.to_list(),df.user_id.to_list()))
 
 
-		df['reports_to_2'] = df.reports_to.map(reports_to_dict)
-		df['reports_to_3'] = df.reports_to_2.map(reports_to_dict)
-		df['reports_to_4'] = df.reports_to_3.map(reports_to_dict)
-		df['reports_to_5'] = df.reports_to_4.map(reports_to_dict)
+        df['reports_to_2'] = df.reports_to.map(reports_to_dict)
+        df['reports_to_3'] = df.reports_to_2.map(reports_to_dict)
+        df['reports_to_4'] = df.reports_to_3.map(reports_to_dict)
+        df['reports_to_5'] = df.reports_to_4.map(reports_to_dict)
 
-		def fix_user_id(arr):
-			data = [arr.reports_to,arr.reports_to_2,arr.reports_to_3,arr.reports_to_4,arr.reports_to_5,arr.reports_to_5]
-			for i in list(range(1,4)):
-				if data[i] == data[i+1]:
-					data[i] = data[i-1]
-				else:
-					pass
-			return pd.Series(data[1:-2], index=['reports_to_2','reports_to_3','reports_to_4'] )
-		df[['reports_to_2','reports_to_3','reports_to_4']] = df.apply(fix_user_id,axis=1)
-		df['reports_to_user'] = df.reports_to.map(emp_for_user_dict)
-		df['reports_to_user_2'] = df.reports_to_2.map(emp_for_user_dict)
-		df['reports_to_user_3'] = df.reports_to_3.map(emp_for_user_dict)
-		df['reports_to_user_4'] = df.reports_to_4.map(emp_for_user_dict)
-		df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
+        def fix_user_id(arr):
+            data = [arr.reports_to,arr.reports_to_2,arr.reports_to_3,arr.reports_to_4,arr.reports_to_5,arr.reports_to_5]
+            for i in list(range(1,4)):
+                if data[i] == data[i+1]:
+                    data[i] = data[i-1]
+                else:
+                    pass
+            return pd.Series(data[1:-2], index=['reports_to_2','reports_to_3','reports_to_4'] )
+        df[['reports_to_2','reports_to_3','reports_to_4']] = df.apply(fix_user_id,axis=1)
+        df['reports_to_user'] = df.reports_to.map(emp_for_user_dict)
+        df['reports_to_user_2'] = df.reports_to_2.map(emp_for_user_dict)
+        df['reports_to_user_3'] = df.reports_to_3.map(emp_for_user_dict)
+        df['reports_to_user_4'] = df.reports_to_4.map(emp_for_user_dict)
+        df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
 
         cache.set('hrms_employee_children', df.to_json())
 
