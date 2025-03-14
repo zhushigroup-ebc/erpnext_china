@@ -187,6 +187,8 @@ def get_employee_tree(parent,
 
     reports_to_user_columns = ['reports_to_user_5','reports_to_user_4','reports_to_user_3','reports_to_user_2','reports_to_user']
     for col in reports_to_user_columns:
-        if sum(df[col]==parent)>0:
+        if sum(df[col]==parent) >0:
             users = df.user_id[(df[col]==parent)&(~df['user_id'].isna())].drop_duplicates().to_list()
-    return users
+            return users
+    return []
+    
