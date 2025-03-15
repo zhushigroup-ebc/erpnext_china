@@ -7,7 +7,7 @@
             <p>2、昨日21:00-今日8:00之间的线索，（凌晨线索客户极大可能在睡觉，建议大家先加微信，ebc备注添加微信，十点左右再打电话）如果在分配后至今日11:00仍未跟进，则暂停自动分配线索7天。</p>
         </div>
     </div>
-    {% if ([frappe.pages.Lead.frm.doc.owner, "Administrator", frappe.pages.Lead.frm.doc.lead_owner].includes(frappe.session.user)) { %}
+    {% if ([frappe.pages.Lead.frm.doc.owner, "Administrator", frappe.pages.Lead.frm.doc.lead_owner, "jintingyan@zhushigroup.cn", "wangjiali@zhushigroup.cn"].includes(frappe.session.user) || frappe.user.has_role("网络推广管理")) { %}
     
     <div class="new-btn pb-3">
         <button class="btn btn-sm small new-note-btn mr-1">
