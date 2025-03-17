@@ -42,7 +42,7 @@
  "links": [],
  "modified": "2025-03-17 23:28:50.702538",
  "modified_by": "Administrator",
- "module": "mdm",
+ "module": "erpnext_china",
  "name": "Aliyun Settings",
  "owner": "Administrator",
  "permissions": [
