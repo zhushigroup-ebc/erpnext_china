@@ -32,7 +32,7 @@ scheduler_events = {
         "0 0 * * *": [
 			"erpnext_china.utils.timed_tasks.task_check_user_in_wecom",
 		],
-		"*/2 * * * *": [
+		"*/10* * * *": [
 			"erpnext_china.hrms_china.custom_form_script.employee.employee.scheduled_tasks_employee_children"
 		],
         # "*/30 * * * *": [
