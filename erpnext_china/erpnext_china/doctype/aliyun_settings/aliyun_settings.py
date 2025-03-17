@@ -94,7 +94,8 @@ def get_address_details(text):
         pass
 
     try:
-        address = json.loads(extract_address(text))['location_extract'][0].get('word')
+        t = res['prov']+res['city']+res['district']
+        address = json.loads(extract_address(text))['location_extract'][0].get('word').replace(t,'')
         res.update({'address':address})
     except Exception as e:
         pass
