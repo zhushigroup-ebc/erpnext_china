@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:abbr",
+ "creation": "2025-03-17 19:18:06.707942",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "abbr",
+  "supplier"
+ ],
+ "fields": [
+  {
+   "fieldname": "abbr",
+   "fieldtype": "Data",
+   "label": "Abbr",
+   "unique": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-03-17 19:25:01.761880",
+ "modified_by": "Administrator",
+ "module": "ERPNext China",
+ "name": "Logistics and Carrier",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "\u9500\u552e",
+   "select": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
