@@ -139,6 +139,10 @@ def scheduled_tasks_employee_children():
         df['reports_to_user_4'] = df.reports_to_4.map(emp_for_user_dict)
         df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
 
+        report_to_user_list = df.reports_to_user.dropna().drop_duplicates().to_list()
+        for user_id in report_to_user_list:
+            users = df.user_id[((df['reports_to_user']==user_id)|(df['reports_to_user_2']==user_id)|(df['reports_to_user_3']==user_id)|(df['reports_to_user_4']==user_id)|(df['reports_to_user_5']==user_id))&(~df['user_id'].isna())].drop_duplicates().to_list()
+            cache.set(f'hrms_employee_children_{user_id}', json.dumps(users))
         cache.set('hrms_employee_children', df.to_json())
 
     if frappe.cache.get('hrms_employee_children') != None:
@@ -178,17 +182,15 @@ def get_employee_tree(parent,
     users = []
     if is_root:
         # 树的最顶点
-        employee = 'zhukunfu@zhushigroup.cn'
+        parent = 'zhukunfu@zhushigroup.cn'
     try:
-        df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
+        users = json.loads(frappe.cache.get(f'hrms_employee_children_{parent}'))
     except:
         scheduled_tasks_employee_children()
-        df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
+        try:
+            users = json.loads(frappe.cache.get(f'hrms_employee_children_{parent}'))
+        except:
+            pass
+    return users
 
-    reports_to_user_columns = ['reports_to_user_5','reports_to_user_4','reports_to_user_3','reports_to_user_2','reports_to_user']
-    for col in reports_to_user_columns:
-        if sum(df[col]==parent) >0:
-            users = df.user_id[(df[col]==parent)&(~df['user_id'].isna())].drop_duplicates().to_list()
-            return users
-    return []
     
