@@ -13,7 +13,8 @@ dependencies = [
     "xmltodict~=0.13.0",
     "qrcode~=8.0",
     "paramiko~=3.5.0",
-    "sqlalchemy==1.4.27"
+    "sqlalchemy==1.4.27",
+    "aliyun-python-sdk-core==2.16.0",
 ]
 
 [build-system]
