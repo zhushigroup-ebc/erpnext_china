@@ -186,11 +186,7 @@ def get_employee_tree(parent,
     try:
         users = json.loads(frappe.cache.get(f'hrms_employee_children_{parent}'))
     except:
-        scheduled_tasks_employee_children()
-        try:
-            users = json.loads(frappe.cache.get(f'hrms_employee_children_{parent}'))
-        except:
-            pass
+        pass
     return users
 
     
