@@ -7,7 +7,7 @@ from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 
 class CustomPurchaseOrder(PurchaseOrder):
 
-    # 取消父类中对schedule_date的验证
+	# 取消父类中对schedule_date的验证
 	def validate_schedule_date(self):
 		pass
 
@@ -16,6 +16,16 @@ def make_internal_sales_order(doc, method):
 		current_user = frappe.session.user
 		frappe.set_user("Administrator")
 		sales_order = make_inter_company_transaction('Purchase Order',doc.name,target_doc=None)
+		# make_internal_purchase_order -> make_purchase_order_for_default_supplier ->
+		# set_missing_values -> make_internal_sales_order -> 
+		# make_inter_company_transaction -> update_details
+		# 临时解决 erpnext/controllers/accounts_controller.py->validate_party_address() 
+		# 验证内部销售订单客户地址不通过的问题
+		sales_order.customer_address = None
+		sales_order.address_display = None
+		sales_order.shipping_address_name = None
+		sales_order.shipping_address = None
+
 		validate_delivery_date(sales_order,doc)
 		try:
 			sales_order.save().submit()
