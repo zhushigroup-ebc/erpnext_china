@@ -25,7 +25,33 @@ class CustomSalesOrder(SalesOrder):
         if name:
             return {'name': name}
 
+    def set_address_link_internal_customer(self):
+        # 解决由于内部订单客户与地址不匹配引发
+        # erpnext/controllers/accounts_controller.py -> validate_party_address 
+        # 验证失败的问题
+
+        # make_internal_purchase_order -> make_purchase_order_for_default_supplier ->
+		# set_missing_values -> make_internal_sales_order -> 
+		# make_inter_company_transaction -> update_details
+
+        if frappe.db.get_value("Customer", self.customer, "is_internal_customer") == 1:
+
+            address_link = frappe.db.exists("Dynamic Link", {
+                "link_doctype": "Customer", 
+                "link_name": self.customer, 
+                "parenttype": "Address", 
+                "parent": self.shipping_address_name
+            })
+            if not address_link:
+                address_doc = frappe.get_doc("Address", self.shipping_address_name)
+                address_doc.append("links", {
+                    "link_doctype": "Customer",
+                    "link_name": self.customer
+                })
+                address_doc.save(ignore_permissions=True)
+
     def before_validate(self, method=None):
+        self.set_address_link_internal_customer()
         items = [d.item_code for d in self.items]
         # 只从数据库读取一次
         default_warehouse_list = frappe.get_all('Item Default', 
