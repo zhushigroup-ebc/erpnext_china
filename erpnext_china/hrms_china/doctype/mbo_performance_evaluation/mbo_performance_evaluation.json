@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-22 14:34:33.778907",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_dqw4",
+  "amended_from",
+  "section_break_qgkh",
+  "employee",
+  "column_break_zpsz",
+  "column_break_zfqb",
+  "section_break_kwlw",
+  "performance_evaluation_and_summary_form",
+  "summary_and_improvement_tab",
+  "section_break_hgzw",
+  "what_went_well",
+  "what_did_not_go_well",
+  "column_break_hfdx",
+  "what_support_is_needed",
+  "what_could_be_better",
+  "section_break_rsrt",
+  "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_dqw4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MBO Performance Evaluation",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "performance_evaluation_and_summary_form",
+   "fieldtype": "Table",
+   "label": "Performance Evaluation and Summary Form",
+   "options": "MBO Performance Evaluation Detail"
+  },
+  {
+   "fieldname": "section_break_qgkh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "section_break_kwlw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zpsz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_hgzw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "what_went_well",
+   "fieldtype": "Small Text",
+   "label": "What Went Well"
+  },
+  {
+   "fieldname": "what_did_not_go_well",
+   "fieldtype": "Small Text",
+   "label": "What Did Not Go Well"
+  },
+  {
+   "fieldname": "column_break_hfdx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "what_support_is_needed",
+   "fieldtype": "Small Text",
+   "label": "What Support Is Needed"
+  },
+  {
+   "fieldname": "what_could_be_better",
+   "fieldtype": "Small Text",
+   "label": "What Could Be Better"
+  },
+  {
+   "fieldname": "summary_and_improvement_tab",
+   "fieldtype": "Tab Break",
+   "label": "Summary and Improvement"
+  },
+  {
+   "fieldname": "column_break_zfqb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_rsrt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
+   "fieldtype": "Small Text",
+   "label": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-22 16:47:41.971961",
+ "modified_by": "Administrator",
+ "module": "hrms_china",
+ "name": "MBO Performance Evaluation",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
