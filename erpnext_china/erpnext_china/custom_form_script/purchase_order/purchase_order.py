@@ -17,8 +17,8 @@ def make_internal_sales_order(doc, method):
 		frappe.set_user("Administrator")
 		sales_order = make_inter_company_transaction('Purchase Order',doc.name,target_doc=None)
 
-		sales_order.customer_address = None
-		sales_order.address_display = None
+		# sales_order.customer_address = None
+		# sales_order.address_display = None
 		# sales_order.shipping_address_name = None
 		# sales_order.shipping_address = None
 
