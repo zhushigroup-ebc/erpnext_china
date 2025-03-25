@@ -23,11 +23,6 @@
   "column_break_btjy",
   "total_score",
   "final_score",
-  "section_break_qoyw",
-  "workflow_records",
-  "section_break_djtm",
-  "workflow_record_html",
-  "summary_and_improvement_tab",
   "section_break_hgzw",
   "what_went_well",
   "what_did_not_go_well",
@@ -35,7 +30,11 @@
   "what_support_is_needed",
   "what_could_be_better",
   "section_break_rsrt",
-  "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae"
+  "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
+  "section_break_qoyw",
+  "workflow_records",
+  "section_break_djtm",
+  "workflow_record_html"
  ],
  "fields": [
   {
@@ -105,11 +104,6 @@
    "fieldname": "what_could_be_better",
    "fieldtype": "Small Text",
    "label": "What Could Be Better"
-  },
-  {
-   "fieldname": "summary_and_improvement_tab",
-   "fieldtype": "Tab Break",
-   "label": "Summary and Improvement"
   },
   {
    "fieldname": "column_break_zfqb",
@@ -215,7 +209,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-24 17:08:24.362771",
+ "modified": "2025-03-25 14:54:15.776623",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "MBO Performance Evaluation",

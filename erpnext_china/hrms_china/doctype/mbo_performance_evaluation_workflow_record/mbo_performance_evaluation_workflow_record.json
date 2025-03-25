@@ -6,17 +6,11 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "workflow_status",
+  "workflow_state",
   "approval_date",
   "employee"
  ],
  "fields": [
-  {
-   "fieldname": "workflow_status",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Workflow Status"
-  },
   {
    "fieldname": "approval_date",
    "fieldtype": "Datetime",
@@ -29,13 +23,19 @@
    "in_list_view": 1,
    "label": "Employee",
    "options": "Employee"
+  },
+  {
+   "fieldname": "workflow_state",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Workflow State"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-24 15:21:10.439654",
+ "modified": "2025-03-25 16:14:40.734887",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "MBO Performance Evaluation Workflow Record",

@@ -15,7 +15,7 @@
  "fields": [
   {
    "fieldname": "expected_goal",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Expected Goal"
   },
@@ -28,13 +28,13 @@
   },
   {
    "fieldname": "evaluation_criteria",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Evaluation Criteria"
   },
   {
    "fieldname": "actual_achievement",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Actual Achievement"
   },
@@ -50,7 +50,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-24 15:48:11.489879",
+ "modified": "2025-03-25 16:39:00.197802",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "MBO Performance Evaluation Detail",
