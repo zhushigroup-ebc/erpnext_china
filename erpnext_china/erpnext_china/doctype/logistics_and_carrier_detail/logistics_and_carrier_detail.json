@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-25 16:48:48.129975",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "territory",
+  "min_weight",
+  "rate",
+  "duration_of_time",
+  "dimensional_factor",
+  "min_freight"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "territory",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Territory",
+   "options": "Territory"
+  },
+  {
+   "columns": 1,
+   "fieldname": "min_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Min Weight\uff08kg\uff09",
+   "non_negative": 1
+  },
+  {
+   "columns": 1,
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "duration_of_time",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Duration Of Time"
+  },
+  {
+   "fieldname": "dimensional_factor",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Dimensional Factor",
+   "non_negative": 1,
+   "precision": "2"
+  },
+  {
+   "columns": 1,
+   "fieldname": "min_freight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Min Freight",
+   "non_negative": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-25 17:12:45.069421",
+ "modified_by": "Administrator",
+ "module": "ERPNext China",
+ "name": "Logistics And Carrier Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

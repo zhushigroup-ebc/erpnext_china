@@ -7,7 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "abbr",
-  "supplier"
+  "supplier",
+  "section_break_hvbq",
+  "logistics_and_carrier_detail",
+  "section_break_khxm",
+  "freight_calculation_method"
  ],
  "fields": [
   {
@@ -21,12 +25,31 @@
    "fieldtype": "Link",
    "label": "Supplier",
    "options": "Supplier"
+  },
+  {
+   "fieldname": "section_break_hvbq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "logistics_and_carrier_detail",
+   "fieldtype": "Table",
+   "label": "Logistics And Carrier Detail",
+   "options": "Logistics And Carrier Detail"
+  },
+  {
+   "fieldname": "section_break_khxm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "freight_calculation_method",
+   "fieldtype": "Code",
+   "label": "Freight Calculation Method"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-17 19:25:01.761880",
+ "modified": "2025-03-25 17:11:20.543226",
  "modified_by": "Administrator",
  "module": "ERPNext China",
  "name": "Logistics and Carrier",
