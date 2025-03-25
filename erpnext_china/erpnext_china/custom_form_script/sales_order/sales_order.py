@@ -241,6 +241,10 @@ class CustomSalesOrder(SalesOrder):
 
     def validate_user_can_sell_item(self):
         if self.is_new():
+            # 如果是售后的权限，则无需验证
+            if '售后' in frappe.get_roles(frappe.session.user):
+                return
+
             current_employee = frappe.db.get_value("Employee", filters={"user_id": frappe.session.user}, fieldname='name')
             leaders = get_employee_all_leaders(current_employee)
             leaders.append(current_employee)
