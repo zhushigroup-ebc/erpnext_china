@@ -5,6 +5,21 @@
         background-repeat: no-repeat;
     }
 
+    .main-section {
+        background-image: url("/assets/erpnext_china/icons/bg.svg#svgView(preserveAspectRatio(none))");
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+    }
+
+    .sticky-top {
+        background-image: url("/assets/erpnext_china/icons/bg.svg#svgView(preserveAspectRatio(none))");
+        background-size: 100% auto;
+        /* 横向100%拉伸，垂直方向自适应高度 */
+        background-repeat: no-repeat;
+        background-position: left top; 
+        /* 垂直方向居中显示 */
+    }
+
     .page-container {
         background: transparent;
     }
@@ -19,6 +34,55 @@
 
     .layout-main-section {
         background: transparent;
+        .page-form {
+            background-color: rgba(255, 255, 255, 0.60);
+        }
+
+        .frappe-list {
+            background-color: rgba(255, 255, 255, 0.60);
+        }
+    }
+
+    .layout-main-section-wrapper .layout-main-section {
+        background-color: rgba(255, 255, 255, 0.60);
+    }
+
+    .standard-filter-section .form-group .input-with-feedback {
+        border-radius: 5px;
+        border: 1px solid #E8E8E8;
+        background: #FFF;
+    }
+
+    .list-row-head {
+        border-radius: 10px;
+        border: 1px solid #FFF;
+        background: #F1F6FF;
+        height: 81.31px;
+    }
+
+    .list-sidebar-button {
+        border-radius: 10px;
+        border: 1px solid #FFF;
+        background: rgba(255, 255, 255, 0.60);
+    }
+
+    .list-filters .input-area .frappe-control .form-group .control-input-wrapper .control-input .input-with-feedback {
+        border-radius: 10px;
+        border: 1px solid #FFF;
+        background: rgba(255, 255, 255, 0.60);
+    }
+
+    .timeline-item{
+        background: transparent;
+    }
+
+    .timeline-items{
+        background: transparent;
+    }
+
+    .indicator-pill {
+        height: 26px;
+        border-radius: 6px;
     }
 
     .spacer {
@@ -40,17 +104,18 @@
         border-radius: 10px;
     }
 
-    .standard-sidebar .standard-sidebar-item.selected,
-    .desk-sidebar .standard-sidebar-item.selected,
-    .search-dialog .search-results .search-sidebar .standard-sidebar-item.selected {
+    .standard-sidebar-item.selected {
         background-image: linear-gradient(90deg, #3264F6 0%, #7A88FF 100%);
         height: 48px;
     }
 
-    .standard-sidebar .standard-sidebar-item,
-    .desk-sidebar .standard-sidebar-item,
-    .search-dialog .search-results .search-sidebar .standard-sidebar-item {
+    .standard-sidebar-item {
         height: 48px;
+    }
+
+    .standard-sidebar-item:hover {
+        background-color: #E8F1FF;
+        cursor: pointer;
     }
 
     .desk-sidebar-item.selected .sidebar-item-label {
