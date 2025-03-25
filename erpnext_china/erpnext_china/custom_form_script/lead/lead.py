@@ -149,12 +149,11 @@ class CustomLead(Lead):
 	def set_note_type(self):
 		for note in self.notes:
 			if note.is_new() and not note.custom_note_type:
-				user = frappe.get_doc('User', note.added_by)
 				if note.added_by in ['jintingyan@zhushigroup.cn', 'wangjiali@zhushigroup.cn']:
 					note.custom_note_type = '客服反馈'
-				elif user.role_profile_name == '销售':
+				elif '销售' in frappe.get_roles(note.added_by):
 					note.custom_note_type = '销售反馈'
-				elif user.role_profile_name == '网推':
+				elif '网络推广' in frappe.get_roles(note.added_by):
 					note.custom_note_type = '网推反馈'
 				else:
 					note.custom_note_type = '其它'
