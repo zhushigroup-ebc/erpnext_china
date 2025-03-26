@@ -24,7 +24,7 @@ frappe.ui.ThemeSwitcher = class CustomThemeSwitcher extends frappe.ui.ThemeSwitc
 					info:"Uses system's theme to switch between light and dark mode",
 				},
                 {
-                    name:"ai_era",
+                    name:"ai era",
                     label: __("AI Era"),
                     info: "AI 时代"
                 }
