@@ -19,7 +19,7 @@ add_to_apps_screen = [
 after_install = "erpnext_china.setup.after_install.operations.install_fixtures.install"
 
 app_include_js = ["erpnext_china.bundle.js"]
-app_include_css = "business.bundle.css"
+app_include_css = "ai_era.bundle.css"
 
 scheduler_events = {
 	"cron": {
