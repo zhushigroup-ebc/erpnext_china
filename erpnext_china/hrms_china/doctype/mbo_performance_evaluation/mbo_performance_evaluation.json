@@ -31,8 +31,6 @@
   "what_could_be_better",
   "section_break_rsrt",
   "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
-  "section_break_qoyw",
-  "workflow_records",
   "section_break_djtm",
   "workflow_record_html"
  ],
@@ -189,17 +187,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "section_break_qoyw",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "workflow_records",
-   "fieldtype": "Table",
-   "hidden": 1,
-   "label": "Workflow Records",
-   "options": "MBO Performance Evaluation Workflow Record"
-  },
-  {
    "fieldname": "workflow_record_html",
    "fieldtype": "HTML",
    "label": "Workflow Record HTML"
@@ -209,7 +196,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-25 14:54:15.776623",
+ "modified": "2025-03-26 17:08:18.718479",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "MBO Performance Evaluation",
