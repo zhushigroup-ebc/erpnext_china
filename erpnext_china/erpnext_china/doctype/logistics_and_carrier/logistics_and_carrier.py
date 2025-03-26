@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class LogisticsandCarrier(Document):
+class LogisticsAndCarrier(Document):
 	pass
