@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-03-27 21:31:38.282667",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "state",
+  "city",
+  "volumecubic_centimeter",
+  "weightkg",
+  "logistics_and_carrier",
+  "linshi"
+ ],
+ "fields": [
+  {
+   "fieldname": "state",
+   "fieldtype": "Link",
+   "label": "State",
+   "options": "Territory"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "Territory"
+  },
+  {
+   "fieldname": "volumecubic_centimeter",
+   "fieldtype": "Float",
+   "label": "Volume(Cubic Centimeter)"
+  },
+  {
+   "fieldname": "weightkg",
+   "fieldtype": "Float",
+   "label": "Weight(kg)"
+  },
+  {
+   "fieldname": "logistics_and_carrier",
+   "fieldtype": "Link",
+   "label": "Logistics And Carrier",
+   "options": "Logistics And Carrier"
+  },
+  {
+   "fieldname": "linshi",
+   "fieldtype": "Small Text",
+   "label": "linshi"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_virtual": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-03-27 22:01:06.578038",
+ "modified_by": "Administrator",
+ "module": "ERPNext China",
+ "name": "Logistics And Carrier Calculation Tools",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
