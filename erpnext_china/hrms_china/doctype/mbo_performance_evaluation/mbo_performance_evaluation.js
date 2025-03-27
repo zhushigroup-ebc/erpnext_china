@@ -4,7 +4,6 @@
 frappe.ui.form.on("MBO Performance Evaluation", {
 
     refresh(frm) {
-
         if (!frappe.user.has_role('System Manager')) {
             frm.set_df_property("employee", "read_only", 1);
         } else {
@@ -24,11 +23,18 @@ frappe.ui.form.on("MBO Performance Evaluation", {
             frm.set_df_property("section_break_hgzw", "hidden", 0);
             frm.set_df_property("section_break_rsrt", "hidden", 0);
         } else {
+            frm.set_df_property("performance_evaluation_and_summary_form", "read_only", 0);
             frm.set_df_property("section_break_hgzw", "hidden", 1);
             frm.set_df_property("section_break_rsrt", "hidden", 1);
         }
 
-        frm.events.make_workflow_html(frm)
+        const items_wrapper = frm.fields_dict['performance_evaluation_and_summary_form'].wrapper;
+        $(items_wrapper).find('.row-check').css({"height": "auto"});
+        $(items_wrapper).find('.grid-static-col').css({"height": "auto", "max-height": "none"});
+        $(items_wrapper).find(".row-index").css({"height": "auto"});
+        $(items_wrapper).find(".ellipsis").css({"white-space": "normal"});
+
+        frm.events.make_workflow_html(frm);
     },
     set_childfield_read_only(frm, table_fields, value, table_row_name = null) {
         table_fields.forEach(field => {
@@ -54,7 +60,7 @@ frappe.ui.form.on("MBO Performance Evaluation", {
                     if (actions.length == 0) {
                         return;
                     }
-
+                    actions.reverse();
                     let workflow_record_html = `
                         <div style="overflow-x: auto;">
                             <table class="table table-bordered">
