@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2025-03-22 14:34:33.778907",
  "doctype": "DocType",
@@ -196,7 +197,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-26 17:08:18.718479",
+ "modified": "2025-03-27 15:10:54.157299",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "MBO Performance Evaluation",
