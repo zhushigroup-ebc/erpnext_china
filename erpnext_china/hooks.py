@@ -56,7 +56,6 @@ override_doctype_class = {
     'Sales Order':'erpnext_china.erpnext_china.custom_form_script.sales_order.sales_order.CustomSalesOrder',
 	'Sales Order Item': 'erpnext_china.erpnext_china.custom_form_script.sales_order_item.sales_order_item.CustomSalesOrderItem',
     'Purchase Order':'erpnext_china.erpnext_china.custom_form_script.purchase_order.purchase_order.CustomPurchaseOrder',
-    'User':'erpnext_china.erpnext_china.custom_form_script.user.user.CustomUser',
 }
 
 doctype_js = {
