@@ -4,11 +4,11 @@
 frappe.ui.form.on("MBO Performance Evaluation", {
 
     refresh(frm) {
-        if (!frappe.user.has_role('System Manager')) {
-            frm.set_df_property("employee", "read_only", 1);
-        } else {
-            frm.set_df_property("employee", "read_only", 0);
-        }
+        // if (!frappe.user.has_role('System Manager')) {
+        //     frm.set_df_property("employee", "read_only", 1);
+        // } else {
+        //     frm.set_df_property("employee", "read_only", 0);
+        // }
 
         if (["Pending", "月初目标确认-直属上级确认", "月初目标确认-被考核人确认"].includes(frm.doc.workflow_state)) {
             frm.events.set_childfield_read_only(frm, ["expected_goal", "weighting", "evaluation_criteria"], 0);
