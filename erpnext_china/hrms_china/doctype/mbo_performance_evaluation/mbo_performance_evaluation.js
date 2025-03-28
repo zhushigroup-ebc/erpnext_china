@@ -31,7 +31,7 @@ frappe.ui.form.on("MBO Performance Evaluation", {
         const items_wrapper = frm.fields_dict['performance_evaluation_and_summary_form'].wrapper;
         $(items_wrapper).find('.row-check').css({"height": "auto"});
         $(items_wrapper).find('.grid-static-col').css({"height": "auto", "max-height": "none"});
-        $(items_wrapper).find(".row-index").css({"height": "auto"});
+        $(items_wrapper).find(".row-index").css({"height": "auto", "max-height": "none"});
         $(items_wrapper).find(".ellipsis").css({"white-space": "normal"});
 
         frm.events.make_workflow_html(frm);
