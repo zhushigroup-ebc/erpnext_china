@@ -54,7 +54,8 @@
    "fieldname": "performance_evaluation_and_summary_form",
    "fieldtype": "Table",
    "label": "Performance Evaluation and Summary Form",
-   "options": "MBO Performance Evaluation Detail"
+   "options": "MBO Performance Evaluation Detail",
+   "permlevel": 1
   },
   {
    "fieldname": "section_break_qgkh",
@@ -199,7 +200,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-28 14:56:35.383308",
+ "modified": "2025-03-28 15:16:52.518320",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "MBO Performance Evaluation",
