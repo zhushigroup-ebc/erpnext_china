@@ -21,5 +21,5 @@ class LogisticsAndCarrierCalculationTools(Document):
 		self.calculation_result = result
 
 @frappe.whitelist()
-def get_freight():
-	return '运费: 25.0, 时效: 1-2天'
+def get_freight(**kwargs):
+	return '【测试结果】运费: 25.0, 时效: 1-2天'
