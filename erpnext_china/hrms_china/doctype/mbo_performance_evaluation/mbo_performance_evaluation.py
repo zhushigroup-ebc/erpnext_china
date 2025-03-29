@@ -16,8 +16,14 @@ class MBOPerformanceEvaluation(Document):
 				self.employee = employee.name
 				self.designation = employee.designation
 
+	def validate_score(self):
+		for item in self.performance_evaluation_and_summary_form:
+			self.total_score += (item.weighting or 0)
+			self.final_score += (item.score or 0)
+
 	def before_save(self):
 		self.set_missing_value()
+		self.validate_score()
 
 
 @frappe.whitelist()
