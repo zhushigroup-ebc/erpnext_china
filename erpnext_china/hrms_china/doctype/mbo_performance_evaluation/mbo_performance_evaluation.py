@@ -17,9 +17,13 @@ class MBOPerformanceEvaluation(Document):
 				self.designation = employee.designation
 
 	def validate_score(self):
+		total_score = 0
+		final_score = 0
 		for item in self.performance_evaluation_and_summary_form:
-			self.total_score += (item.weighting or 0)
-			self.final_score += (item.score or 0)
+			total_score = total_score + (item.weighting or 0)
+			final_score = final_score + (item.score or 0)
+		self.total_score = total_score
+		self.final_score = final_score
 
 	def before_save(self):
 		self.set_missing_value()
