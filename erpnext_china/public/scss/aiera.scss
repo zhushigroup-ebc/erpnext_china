@@ -1,10 +1,9 @@
 [data-theme="aiera"] {
-    body {
-        background-image: url("/assets/erpnext_china/icons/bg.svg#svgView(preserveAspectRatio(none))");
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-    }
+    // Layout Colors
+    --bg-color: #F4F8FD;
+    --popover-bg: #F4F8FD;
 
+    body,
     .main-section {
         background-image: url("/assets/erpnext_china/icons/bg.svg#svgView(preserveAspectRatio(none))");
         background-size: 100% 100%;
@@ -14,50 +13,44 @@
     .sticky-top {
         background-image: url("/assets/erpnext_china/icons/bg.svg#svgView(preserveAspectRatio(none))");
         background-size: 100% auto;
-        /* 横向100%拉伸，垂直方向自适应高度 */
         background-repeat: no-repeat;
-        background-position: left top; 
-        /* 垂直方向居中显示 */
+        background-position: left top;
     }
 
+    .navbar,
+    .page-head,
     .page-container {
-        background: transparent;
-    }
-
-    .navbar {
-        background: transparent;
-    }
-
-    .page-head {
         background: transparent;
     }
 
     .layout-main-section {
         background: transparent;
+        border-radius: var(--border-radius-md);
+
         .page-form {
             background-color: rgba(255, 255, 255, 0.60);
+            border: 1px solid #FFF;
+            border-bottom: none
         }
 
         .frappe-list {
             background-color: rgba(255, 255, 255, 0.60);
+            border: 1px solid #FFF;
         }
     }
 
     .layout-main-section-wrapper .layout-main-section {
         background-color: rgba(255, 255, 255, 0.60);
+        border: 1px solid #FFF;
     }
 
-    .standard-filter-section .form-group .input-with-feedback {
-        border-radius: 5px;
-        border: 1px solid #E8E8E8;
-        background: #FFF;
-    }
 
+    // list view styles
     .list-row-head {
         border-radius: 10px;
         border: 1px solid #FFF;
         background: #F1F6FF;
-        height: 81.31px;
+        height: 48px;
     }
 
     .list-sidebar-button {
@@ -72,11 +65,12 @@
         background: rgba(255, 255, 255, 0.60);
     }
 
-    .timeline-item{
+    // timeline styles
+    .timeline-item {
         background: transparent;
     }
 
-    .timeline-items{
+    .timeline-items {
         background: transparent;
     }
 
@@ -98,11 +92,22 @@
         background: rgba(255, 255, 255, 0.60);
         border-radius: 12px;
         border: 1px solid #FFF;
+
+        .shortcut-widget-box {
+            border-radius: 10px;
+            // justify for shortcut widget box
+            justify-content: center;
+        }
     }
 
-    .widget.shortcut-widget-box {
-        border-radius: 10px;
+    .widget.dashboard-widget-box .filter-chart {
+        background-color: #F5F9FE !important;
     }
+
+    .dropdown-menu {
+        background-color: #F4F8FD;
+    }
+
 
     .standard-sidebar-item.selected {
         background-image: linear-gradient(90deg, #3264F6 0%, #7A88FF 100%);
@@ -126,13 +131,169 @@
         fill: white !important;
     }
 
-    .awesomplete .form-control {
-        background-color: rgba(255, 255, 255, 0.60);
-        border: 1px solid #E8E8E8;
+    // button style
+    .btn,
+    .btn-default,
+    .btn-secondary,
+    .grid-buttons button {
+        background-color: #F5F9FE;
+        border: 1px solid #FFF;
     }
 
-    .btn-default {
-        background-color: rgba(255, 255, 255, 0.60);
+
+    .btn.btn-primary {
+        background-image: linear-gradient(90deg, #3264F6 0%, #7A88FF 100%);
+
+        &:active {
+            color: var(--gray-100) !important;
+        }
+    }
+
+    .form-sidebar .sidebar-image-section {
+        .sidebar-standard-image {
+            border-radius: 20px;
+            border: none;
+        }
+
+        .standard-image {
+            border-radius: 20px;
+            border: 1px solid #FFF;
+            background: rgba(170, 179, 255, 0.40);
+        }
+    }
+
+    .form-sidebar .sidebar-menu .form-sidebar-items {
+        border-radius: 10px;
+        border: 1px solid #FFF;
+        background: rgba(255, 255, 255, 0.60);
+        // justify center for form sidebar items
+        padding-top: var(--padding-sm)/2;
+        padding-bottom: var(--padding-sm)/2;
+    }
+
+
+    // input control
+    // filters
+    .list_filter .form-group {
+        .awesomplete input {
+            background-color: rgba(255, 255, 255, 0.60);
+            border: 1px solid #FFF;
+        }
+
+        .condition {
+            background-color: rgba(255, 255, 255, 0.60);
+            border: 1px solid #FFF;
+        }
+
+        .filter-field .form-group {
+
+            select,
+            input {
+                background-color: rgba(255, 255, 255, 0.60);
+                border: 1px solid #FFF;
+            }
+
+        }
+    }
+
+    .filter-section {
+        .filter-selector .btn-group button {
+            border: 1px solid #E8E8E8;
+            background: #FFF;
+
+            &:hover {
+                background: #F4F8FD;
+            }
+        }
+
+        .sort-selector .btn-group button {
+            border: 1px solid #E8E8E8;
+            background: #FFF;
+
+            &:hover {
+                background: #F4F8FD;
+            }
+        }
+    }
+
+    // filters with values
+    .btn-primary-light {
+        background: #F4F8FD !important
+    }
+
+
+
+    .form-control:focus {
+        background-color: #F4F8FD;
+        border: 1px solid #3264F6;
+        box-shadow: 0 0 0 2px #F4F8FD88;
+    }
+
+    // standard-filter-section
+    .standard-filter-section .form-group .input-with-feedback {
+        border-radius: 5px;
+        border: 1px solid #E8E8E8;
+        background: #FFF;
+
+        &:focus {
+            border: 1px solid #3264F6;
+        }
+    }
+
+    textarea {
+        border: 1px solid #FFF;
+        background: #F0F6FF;
+    }
+
+    .control-input {
+        input,
+        .link-field .awesomplete input,
+        select {
+            border: 1px solid #FFF !important;
+            background: #F0F6FF;
+
+            &:focus {
+                border: 1px solid #3264F6;
+            }
+        }
+    }
+
+    // comment box, important is nessary!
+    .comment-box .comment-input-container .frappe-control .ql-editor {
+        border: 1px solid #FFF !important;
+        background: #F0F6FF !important;
+
+        &:hover {
+            border: 1px solid #3264F6 !important;
+        }
+    }
+
+    // for tab label and underline
+    .form-tabs-list .form-tabs .nav-item .nav-link.active {
+        font-weight: 600;
+        border-bottom: 3px solid #5877FB;
+        color: #5877FB;
+    }
+
+    // search bar input style
+    .search-bar {
+        .awesomplete input {
+            background-color: rgba(255, 255, 255, 0.60);
+            border: 1px solid #FFF;
+        }
+
+        .awesomplete>[role=listbox] {
+            border: 1px solid #FFF;
+            background-color: #F0F6FF;
+        }
+
+        .awesomplete>[role=listbox]>li:hover,
+        .awesomplete>[role=listbox]>li[aria-selected=true],
+        .awesomplete>[role=listbox]>[role=option]:hover,
+        .awesomplete>[role=listbox]>[role=option][aria-selected=true] {
+            background-color: rgba(0, 0, 0, 0.04);
+            ;
+        }
     }
 }
 
@@ -148,7 +309,7 @@
 }
 
 .btn-uom.selected {
-    background-image:url("/assets/erpnext_china/icons/uom.svg");
+    background-image: url("/assets/erpnext_china/icons/uom.svg");
     color: #FFF;
 }
 
