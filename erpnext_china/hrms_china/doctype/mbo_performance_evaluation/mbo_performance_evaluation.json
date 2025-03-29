@@ -85,9 +85,11 @@
   {
    "fieldname": "what_went_well",
    "fieldtype": "Small Text",
-   "label": "What Went Well"
+   "label": "What Went Well",
+   "mandatory_depends_on": "eval: doc.workflow_state == '\u6708\u672b\u7ed3\u679c-\u672c\u4eba\u786e\u8ba4'"
   },
   {
+   "depends_on": "eval: doc.workflow_state == '\u6708\u672b\u7ed3\u679c-\u672c\u4eba\u786e\u8ba4'",
    "fieldname": "what_did_not_go_well",
    "fieldtype": "Small Text",
    "label": "What Did Not Go Well"
@@ -99,9 +101,11 @@
   {
    "fieldname": "what_support_is_needed",
    "fieldtype": "Small Text",
-   "label": "What Support Is Needed"
+   "label": "What Support Is Needed",
+   "mandatory_depends_on": "eval: doc.workflow_state == '\u6708\u672b\u7ed3\u679c-\u672c\u4eba\u786e\u8ba4'"
   },
   {
+   "depends_on": "eval: doc.workflow_state == '\u6708\u672b\u7ed3\u679c-\u672c\u4eba\u786e\u8ba4'",
    "fieldname": "what_could_be_better",
    "fieldtype": "Small Text",
    "label": "What Could Be Better"
@@ -115,7 +119,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.what_went_well && doc.what_support_is_needed && doc.what_did_not_go_well && doc.what_could_be_better",
+   "depends_on": "eval: doc.workflow_state == '\u4e0a\u7ea7\u610f\u89c1'",
    "fieldname": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
    "fieldtype": "Small Text",
    "label": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae"
@@ -200,7 +204,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-28 15:16:52.518320",
+ "modified": "2025-03-29 19:38:52.325711",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "MBO Performance Evaluation",
