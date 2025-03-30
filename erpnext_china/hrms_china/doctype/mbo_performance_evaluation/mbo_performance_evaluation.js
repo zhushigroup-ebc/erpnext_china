@@ -10,15 +10,6 @@ frappe.ui.form.on("MBO Performance Evaluation", {
         //     frm.set_df_property("employee", "read_only", 0);
         // }
 
-        if (["月末结果-本人确认", "上级意见", "HR最终确认","已确认"].includes(frm.doc.workflow_state)) {
-            frm.set_df_property("performance_evaluation_and_summary_form", "read_only", 1);
-            frm.set_df_property("section_break_hgzw", "hidden", 0);
-            frm.set_df_property("section_break_rsrt", "hidden", 0);
-        } else {
-            frm.set_df_property("performance_evaluation_and_summary_form", "read_only", 0);
-            frm.set_df_property("section_break_hgzw", "hidden", 1);
-            frm.set_df_property("section_break_rsrt", "hidden", 1);
-        }
 
         const items_wrapper = frm.fields_dict['performance_evaluation_and_summary_form'].wrapper;
         $(items_wrapper).find('.row-check').css({"height": "auto"});
