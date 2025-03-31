@@ -42,8 +42,11 @@ frappe.ui.form.AddressQuickEntryForm = class CustomAddressQuickEntryForm extends
     }
 
     insert() {
-        if (cur_frm) {
-            this.dialog.doc["links"] = [{ "link_doctype": cur_frm.doctype, "link_name": cur_frm.docname }];
+        if (
+            frappe.dynamic_link &&
+            frappe.dynamic_link.doc
+        ) {
+            this.dialog.doc["links"] = [{ "link_doctype": frappe.dynamic_link.doctype, "link_name": frappe.dynamic_link.doc[frappe.dynamic_link.fieldname] }];
         }
         return super.insert();
     }
