@@ -1,243 +1,282 @@
 {
-    "actions": [],
-    "allow_import": 1,
-    "autoname": "naming_series:",
-    "creation": "2025-03-22 14:34:33.778907",
-    "doctype": "DocType",
-    "engine": "InnoDB",
-    "field_order": [
-     "section_break_dqw4",
-     "amended_from",
-     "naming_series",
-     "display_level",
-     "section_break_qgkh",
-     "employee",
-     "column_break_aart",
-     "department",
-     "column_break_zpsz",
-     "designation",
-     "column_break_zfqb",
-     "date",
-     "section_break_kwlw",
-     "performance_evaluation_and_summary_form",
-     "section_break_hlpv",
-     "column_break_ohuv",
-     "column_break_btjy",
-     "total_score",
-     "final_score",
-     "section_break_hgzw",
-     "what_went_well",
-     "what_did_not_go_well",
-     "column_break_hfdx",
-     "what_support_is_needed",
-     "what_could_be_better",
-     "section_break_rsrt",
-     "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
-     "section_break_djtm",
-     "workflow_record_html"
-    ],
-    "fields": [
-     {
-      "fieldname": "section_break_dqw4",
-      "fieldtype": "Section Break"
-     },
-     {
-      "fieldname": "amended_from",
-      "fieldtype": "Link",
-      "label": "Amended From",
-      "no_copy": 1,
-      "options": "MBO Performance Evaluation",
-      "print_hide": 1,
-      "read_only": 1,
-      "search_index": 1
-     },
-     {
-      "fieldname": "performance_evaluation_and_summary_form",
-      "fieldtype": "Table",
-      "label": "Performance Evaluation and Summary Form",
-      "options": "MBO Performance Evaluation Detail",
-      "permlevel": 1
-     },
-     {
-      "fieldname": "section_break_qgkh",
-      "fieldtype": "Section Break"
-     },
-     {
-      "fieldname": "employee",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Employee",
-      "options": "Employee",
-      "permlevel": 1
-     },
-     {
-      "fieldname": "section_break_kwlw",
-      "fieldtype": "Section Break",
-      "hide_border": 1
-     },
-     {
-      "fieldname": "column_break_zpsz",
-      "fieldtype": "Column Break"
-     },
-     {
-      "fieldname": "section_break_hgzw",
-      "fieldtype": "Section Break"
-     },
-     {
-      "depends_on": "eval: doc.display_level >0",
-      "fieldname": "what_went_well",
-      "fieldtype": "Small Text",
-      "label": "What Went Well",
-      "mandatory_depends_on": "eval: doc.display_level >0"
-     },
-     {
-      "depends_on": "eval: doc.display_level >0",
-      "fieldname": "what_did_not_go_well",
-      "fieldtype": "Small Text",
-      "label": "What Did Not Go Well",
-      "mandatory_depends_on": "eval: doc.display_level >0"
-     },
-     {
-      "fieldname": "column_break_hfdx",
-      "fieldtype": "Column Break"
-     },
-     {
-      "depends_on": "eval: doc.display_level >0",
-      "fieldname": "what_support_is_needed",
-      "fieldtype": "Small Text",
-      "label": "What Support Is Needed",
-      "mandatory_depends_on": "eval: doc.display_level >0"
-     },
-     {
-      "depends_on": "eval: doc.display_level >0",
-      "fieldname": "what_could_be_better",
-      "fieldtype": "Small Text",
-      "label": "What Could Be Better"
-     },
-     {
-      "fieldname": "column_break_zfqb",
-      "fieldtype": "Column Break"
-     },
-     {
-      "fieldname": "section_break_rsrt",
-      "fieldtype": "Section Break"
-     },
-     {
-      "depends_on": "eval: doc.display_level >1",
-      "fieldname": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
-      "fieldtype": "Small Text",
-      "label": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
-      "mandatory_depends_on": "eval: doc.display_level >1"
-     },
-     {
-      "fetch_from": "employee.designation",
-      "fieldname": "designation",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Designation",
-      "options": "Designation",
-      "read_only": 1
-     },
-     {
-      "default": "now",
-      "depends_on": "eval:doc.employee",
-      "fieldname": "date",
-      "fieldtype": "Date",
-      "in_list_view": 1,
-      "label": "Date"
-     },
-     {
-      "fieldname": "column_break_aart",
-      "fieldtype": "Column Break"
-     },
-     {
-      "fetch_from": "employee.department",
-      "fieldname": "department",
-      "fieldtype": "Link",
-      "in_list_view": 1,
-      "label": "Department",
-      "options": "Department",
-      "read_only": 1
-     },
-     {
-      "fieldname": "section_break_djtm",
-      "fieldtype": "Section Break",
-      "hide_border": 1
-     },
-     {
-      "fieldname": "section_break_hlpv",
-      "fieldtype": "Section Break"
-     },
-     {
-      "fieldname": "column_break_ohuv",
-      "fieldtype": "Column Break"
-     },
-     {
-      "fieldname": "column_break_btjy",
-      "fieldtype": "Column Break"
-     },
-     {
-      "default": "0",
-      "fieldname": "total_score",
-      "fieldtype": "Float",
-      "label": "Total Score",
-      "precision": "1",
-      "read_only": 1
-     },
-     {
-      "default": "0",
-      "fieldname": "final_score",
-      "fieldtype": "Float",
-      "label": "Final Score",
-      "precision": "1",
-      "read_only": 1
-     },
-     {
-      "fieldname": "naming_series",
-      "fieldtype": "Select",
-      "label": "Series",
-      "options": "MBO-.YYYY.-",
-      "reqd": 1
-     },
-     {
-      "fieldname": "workflow_record_html",
-      "fieldtype": "HTML",
-      "label": "Workflow Record HTML"
-     },
-     {
-      "default": "0",
-      "fieldname": "display_level",
-      "fieldtype": "Int",
-      "hidden": 1,
-      "label": "Display Level"
-     }
-    ],
-    "grid_page_length": 50,
-    "index_web_pages_for_search": 1,
-    "is_submittable": 1,
-    "links": [],
-    "modified": "2025-03-30 20:02:27.671095",
-    "modified_by": "Administrator",
-    "module": "hrms_china",
-    "name": "MBO Performance Evaluation",
-    "naming_rule": "By \"Naming Series\" field",
-    "owner": "Administrator",
-    "permissions": [
-     {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "submit": 1,
-      "write": 1
-     }
-    ],
-    "sort_field": "modified",
-    "sort_order": "DESC",
-    "states": []
-   }
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-03-22 14:34:33.778907",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_dqw4",
+  "amended_from",
+  "naming_series",
+  "display_level",
+  "section_break_qgkh",
+  "employee",
+  "user",
+  "column_break_aart",
+  "department",
+  "employee_name",
+  "column_break_zpsz",
+  "designation",
+  "reports_to",
+  "column_break_zfqb",
+  "date",
+  "reports_to_user",
+  "section_break_kwlw",
+  "performance_evaluation_and_summary_form",
+  "section_break_hlpv",
+  "column_break_ohuv",
+  "column_break_btjy",
+  "total_score",
+  "final_score",
+  "section_break_hgzw",
+  "what_went_well",
+  "what_did_not_go_well",
+  "column_break_hfdx",
+  "what_support_is_needed",
+  "what_could_be_better",
+  "section_break_rsrt",
+  "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
+  "section_break_djtm",
+  "workflow_record_html"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_dqw4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "MBO Performance Evaluation",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "performance_evaluation_and_summary_form",
+   "fieldtype": "Table",
+   "label": "Performance Evaluation and Summary Form",
+   "options": "MBO Performance Evaluation Detail",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "section_break_qgkh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "section_break_kwlw",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "fieldname": "column_break_zpsz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_hgzw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: doc.display_level >0",
+   "fieldname": "what_went_well",
+   "fieldtype": "Small Text",
+   "label": "What Went Well",
+   "mandatory_depends_on": "eval: doc.display_level >0"
+  },
+  {
+   "depends_on": "eval: doc.display_level >0",
+   "fieldname": "what_did_not_go_well",
+   "fieldtype": "Small Text",
+   "label": "What Did Not Go Well",
+   "mandatory_depends_on": "eval: doc.display_level >0"
+  },
+  {
+   "fieldname": "column_break_hfdx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.display_level >0",
+   "fieldname": "what_support_is_needed",
+   "fieldtype": "Small Text",
+   "label": "What Support Is Needed",
+   "mandatory_depends_on": "eval: doc.display_level >0"
+  },
+  {
+   "depends_on": "eval: doc.display_level >0",
+   "fieldname": "what_could_be_better",
+   "fieldtype": "Small Text",
+   "label": "What Could Be Better"
+  },
+  {
+   "fieldname": "column_break_zfqb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_rsrt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval: doc.display_level >1",
+   "fieldname": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
+   "fieldtype": "Small Text",
+   "label": "\u4e0a\u7ea7\u7684\u6307\u5bfc\u4e0e\u5efa\u8bae",
+   "mandatory_depends_on": "eval: doc.display_level >1"
+  },
+  {
+   "fetch_from": "employee.designation",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Designation",
+   "options": "Designation",
+   "read_only": 1
+  },
+  {
+   "default": "now",
+   "depends_on": "eval:doc.employee",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "column_break_aart",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_djtm",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "fieldname": "section_break_hlpv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ohuv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_btjy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_score",
+   "fieldtype": "Float",
+   "label": "Total Score",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "final_score",
+   "fieldtype": "Float",
+   "label": "Final Score",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "options": "MBO-.YYYY.-",
+   "reqd": 1
+  },
+  {
+   "fieldname": "workflow_record_html",
+   "fieldtype": "HTML",
+   "label": "Workflow Record HTML"
+  },
+  {
+   "default": "0",
+   "fieldname": "display_level",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Display Level"
+  },
+  {
+   "fetch_from": "employee.user_id",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.first_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.reports_to",
+   "fieldname": "reports_to",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Reports to",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reports_to.user_id",
+   "fieldname": "reports_to_user",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Reports to User",
+   "options": "User",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-31 16:05:34.403698",
+ "modified_by": "Administrator",
+ "module": "hrms_china",
+ "name": "MBO Performance Evaluation",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
