@@ -91,12 +91,16 @@
     .widget {
         background: rgba(255, 255, 255, 0.60);
         border-radius: 12px;
-        border: 1px solid #FFF;
+        border: 1px solid #e4e7ed;
 
         .shortcut-widget-box {
             border-radius: 10px;
             // justify for shortcut widget box
             justify-content: center;
+        }
+
+        .widget-head {
+            height: 26px;
         }
     }
 
@@ -110,7 +114,7 @@
 
 
     .standard-sidebar-item.selected {
-        background-image: linear-gradient(90deg, #3264F6 0%, #7A88FF 100%);
+        background-image: linear-gradient(90deg, #B2D5EE 0%, #B2D5EE88 100%);
         height: 48px;
     }
 
