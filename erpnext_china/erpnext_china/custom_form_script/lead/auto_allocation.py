@@ -17,6 +17,16 @@ def lead_before_save_handle(doc):
 				if doc.source != "业务自录入" and not check_lead_total_limit(lead_owner_employee):
 					frappe.throw("当前线索负责人客保数量已满，请选择其他负责人！")
 				else:
+					# 找到此员工的分配规则
+					item_name = frappe.db.get_value("Auto Allocation Config Item", filters={
+						"activate": 1,
+						"product_category": doc.custom_product_category,
+						"employee": lead_owner_employee
+					})
+					if item_name:
+						item_doc = frappe.get_doc("Auto Allocation Config Item", item_name)
+						item_doc.zero_datetime = frappe.utils.now_datetime()
+						item_doc.save(ignore_permissions=True)
 					to_private(doc)
 		else:
 			if auto_allocation:
@@ -96,41 +106,41 @@ def get_items_from_allocation_limit(items):
 	return [item for item in items if item.count > item.allocated_count]
 
 def get_items_from_total_limit(items):
-    """
-    查找客保数量未到限制的员工
-    """
-    # 提取所有涉及的员工并去重
-    employees = {item.employee for item in items}
-    
-    # 批量获取所有员工的 custom_lead_total
-    employee_limits = frappe.db.get_all(
-        "Employee", 
-        filters={"name": ["in", list(employees)]}, 
-        fields=['name', 'custom_lead_total']
-    )
-    employee_limits = {emp.name: emp.custom_lead_total or 0 for emp in employee_limits}
+	"""
+	查找客保数量未到限制的员工
+	"""
+	# 提取所有涉及的员工并去重
+	employees = {item.employee for item in items}
+	
+	# 批量获取所有员工的 custom_lead_total
+	employee_limits = frappe.db.get_all(
+		"Employee", 
+		filters={"name": ["in", list(employees)]}, 
+		fields=['name', 'custom_lead_total']
+	)
+	employee_limits = {emp.name: emp.custom_lead_total or 0 for emp in employee_limits}
 
-    # 批量获取每个员工的未转换线索数量
-    lead_counts = frappe.db.get_all(
-        "Lead",
-        filters={
+	# 批量获取每个员工的未转换线索数量
+	lead_counts = frappe.db.get_all(
+		"Lead",
+		filters={
 			"custom_lead_owner_employee": ["in", list(employees)],
 			"status": ["!=", "Converted"],
 			"source": ["!=", "业务自录入"]
 		},
-        fields=["custom_lead_owner_employee", "COUNT(*) as count"],
-        group_by="custom_lead_owner_employee"
-    )
-    lead_counts = {lc['custom_lead_owner_employee']: lc['count'] for lc in lead_counts}
+		fields=["custom_lead_owner_employee", "COUNT(*) as count"],
+		group_by="custom_lead_owner_employee"
+	)
+	lead_counts = {lc['custom_lead_owner_employee']: lc['count'] for lc in lead_counts}
 
-    # 筛选出客保数量未达到限制的员工
-    valid_employees = {
-        emp: limit for emp, limit in employee_limits.items()
-        if lead_counts.get(emp, 0) < limit
-    }
+	# 筛选出客保数量未达到限制的员工
+	valid_employees = {
+		emp: limit for emp, limit in employee_limits.items()
+		if lead_counts.get(emp, 0) < limit
+	}
 
-    # 返回符合要求的 items
-    return [item for item in items if item.employee in valid_employees]
+	# 返回符合要求的 items
+	return [item for item in items if item.employee in valid_employees]
 
 # def check_allocated_limit(count:int, allocated_count: int)->bool:
 # 	"""
