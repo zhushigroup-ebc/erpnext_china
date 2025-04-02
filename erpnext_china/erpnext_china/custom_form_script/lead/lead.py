@@ -196,7 +196,7 @@ class CustomLead(Lead):
 				self.lead_add_comment(text)
 				lead_tools.insert_crm_note(self, text, '分配日志')
 		
-		if self.is_new() and self.source == "业务自录入":
+		if self.is_new() and self.source in ["业务自录入","已合作客户补录"]:
 			self.status = "Lead"
 
 	def after_insert(self):
