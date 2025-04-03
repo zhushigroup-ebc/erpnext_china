@@ -18,9 +18,9 @@ add_to_apps_screen = [
 
 after_install = "erpnext_china.setup.after_install.operations.install_fixtures.install"
 
-after_migrate = {
+after_migrate = [
 	"erpnext_china.hrms_china.custom_form_script.employee.employee.scheduled_tasks_employee_children",
-	}
+	]
 app_include_js = ["erpnext_china.bundle.js"]
 app_include_css = "aiera.bundle.css"
 
