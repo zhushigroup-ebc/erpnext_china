@@ -14,7 +14,7 @@ def lead_before_save_handle(doc):
 		# 保存前有线索负责员工，说明是手动录入或修改
 		if lead_owner_employee:
 			if doc.has_value_changed("custom_lead_owner_employee"):
-				if doc.source != "业务自录入" and not check_lead_total_limit(lead_owner_employee):
+				if doc.source not in ["业务自录入", "已合作客户补录"] and not check_lead_total_limit(lead_owner_employee):
 					frappe.throw("当前线索负责人客保数量已满，请选择其他负责人！")
 				else:
 					# 找到此员工的分配规则
@@ -126,7 +126,7 @@ def get_items_from_total_limit(items):
 		filters={
 			"custom_lead_owner_employee": ["in", list(employees)],
 			"status": ["!=", "Converted"],
-			"source": ["!=", "业务自录入"]
+			"source": ["not in", ["业务自录入", "已合作客户补录"]]
 		},
 		fields=["custom_lead_owner_employee", "COUNT(*) as count"],
 		group_by="custom_lead_owner_employee"
@@ -170,7 +170,7 @@ def check_lead_total_limit(employee: str) -> bool:
 	count = frappe.db.count("Lead", {
 		"custom_lead_owner_employee": employee,
 		"status": ["!=", "Converted"],
-		"source": ["!=", "业务自录入"]
+		"source": ["not in", ["业务自录入", "已合作客户补录"]]
 	})
 	if count >= (employee_dict.custom_lead_total or 0):
 		return False

@@ -296,7 +296,7 @@ def get_employee_lead_total(**kwargs):
 		count = frappe.db.count("Lead", {
 			"custom_lead_owner_employee": obj.name,
 			"status": ["!=", "Converted"],
-			"source": ["!=", "业务自录入"]
+			"source": ["not in", ["业务自录入", "已合作客户补录"]]
 		})
 		value = (obj.custom_lead_total or 0) - count
 	
