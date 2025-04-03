@@ -145,6 +145,29 @@ frappe.ui.form.on('Lead', {
                 frm.refresh_field("source");
             })
         }
+
+        if(!frm.is_new()) {
+            frm.events.reset_help_box(frm, ["custom_wechat", "mobile_no", "phone"]);
+        }
     },
-    
+    reset_help_box(frm, fields) {
+        fields.forEach(field=>{
+            const wrapper = frm.fields_dict[field].wrapper;
+            const help_box = $(wrapper).find(".help-box");
+            if (help_box) {
+                const help_box_text = help_box.text();
+                $(help_box).empty();
+                if(frm.doc[field]) {
+                    if (field == 'custom_wechat') {
+                        const $description_html = $(`<span style="background-color: var(--control-bg);border-radius: 5px;padding: 3px 8px;cursor: copy;">${help_box_text}</span>`).appendTo(help_box);
+                        $description_html.click(()=>{
+                            frappe.utils.copy_to_clipboard(frm.doc[field])
+                        })
+                    } else {
+                        $(`<a style="background-color: var(--control-bg);border-radius: 5px;padding: 3px 8px;" href='tel:${frm.doc[field]}'>${help_box_text}</a>`).appendTo(help_box);
+                    }
+                }
+            }
+        })
+    }
 })
