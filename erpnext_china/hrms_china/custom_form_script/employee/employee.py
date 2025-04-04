@@ -103,56 +103,56 @@ class CustomEmployee(Employee):
     def validate_unique_salary_component_item(self):
         if self.has_duplicates():
             frappe.throw('薪资构成项不可重复！')
+@frappe.whitelist()
 def scheduled_tasks_employee_children():
     import frappe,datetime
     cache = frappe.cache()
     import pandas as pd
     import numpy as np
-    def run():
-        column_name = ['modified','name', 'employee', 'employee_name', 'gender', 'date_of_birth','date_of_joining', 'status', 'user_id', 'reports_to']
-        data = frappe.db.get_all('Employee',fields = column_name,as_list=True)
-        df = pd.DataFrame(data,columns=column_name)
 
-        df.replace('[NULL]',np.nan,inplace=True)
-        df['reports_to'] = df.reports_to.fillna(df.name)
-        reports_to_dict = dict(zip(df.name.to_list(),df.reports_to.to_list()))
-        emp_for_user_dict = dict(zip(df.name.to_list(),df.user_id.to_list()))
+    data = frappe.db.sql('''select name as emp1 from ebc.tabEmployee
+    where ebc.tabEmployee.status = 'Active'
+    and ebc.tabEmployee.reports_to is null''',as_dict=0)
+    df_ = pd.DataFrame(data,columns=['emp1'])
 
+    column_name = column_name = ['name','first_name','user_id','reports_to']
+    data = frappe.db.get_all('Employee',fields = column_name,as_list=True)
+    df = pd.DataFrame(data=data,columns=column_name)
+    df.replace('[NULL]',np.nan,inplace=True)
+    def get_children(employee):
+        return df[df.reports_to == employee].name.to_list()
+    def get_userid(employee):
+        try:
+            return df[df.name == employee].user_id.iloc[0]
+        except:
+            return None
+    def get_empname(employee):
+        try:
+            return df[df.name == employee].first_name.iloc[0]
+        except:
+            return None
 
-        df['reports_to_2'] = df.reports_to.map(reports_to_dict)
-        df['reports_to_3'] = df.reports_to_2.map(reports_to_dict)
-        df['reports_to_4'] = df.reports_to_3.map(reports_to_dict)
-        df['reports_to_5'] = df.reports_to_4.map(reports_to_dict)
+    df_['user_id1'] = df_['emp1'].apply(get_userid)
+    df_['name1'] = df_['emp1'].apply(get_empname)
+    for i in list(range(1,6)):
+        df_['emp'+str(i+1)] = df_['emp'+str(i)].apply(get_children)
+        df_ = df_.explode('emp'+str(i+1))
+        
+        df_['user_id'+str(i+1)] = df_['emp'+str(i+1)].apply(get_userid)
+        df_['name'+str(i+1)] = df_['emp'+str(i+1)].apply(get_empname)
 
-        def fix_user_id(arr):
-            data = [arr.reports_to,arr.reports_to_2,arr.reports_to_3,arr.reports_to_4,arr.reports_to_5,arr.reports_to_5]
-            for i in list(range(1,4)):
-                if data[i] == data[i+1]:
-                    data[i] = data[i-1]
-                else:
-                    pass
-            return pd.Series(data[1:-2], index=['reports_to_2','reports_to_3','reports_to_4'] )
-        df[['reports_to_2','reports_to_3','reports_to_4']] = df.apply(fix_user_id,axis=1)
-        df['reports_to_user'] = df.reports_to.map(emp_for_user_dict)
-        df['reports_to_user_2'] = df.reports_to_2.map(emp_for_user_dict)
-        df['reports_to_user_3'] = df.reports_to_3.map(emp_for_user_dict)
-        df['reports_to_user_4'] = df.reports_to_4.map(emp_for_user_dict)
-        df['reports_to_user_5'] = df.reports_to_5.map(emp_for_user_dict)
+    df_ = df_.sort_index(axis=1)
+    report_to_list = df[~df['user_id'].isna()].reports_to.dropna().drop_duplicates().to_list()
+    for emp in report_to_list:
+        users_df = df_[(df_['emp1']==emp)|(df_['emp2']==emp)|(df_['emp3']==emp)|(df_['emp4']==emp)|(df_['emp6']==emp)]
+        users = []
+        for i in list(range(1,6)):
+            users = users + users_df['user_id'+str(i)].dropna().drop_duplicates().to_list()
+        user = df.user_id[df.name==emp].iloc[0]
+        users.append(user)
+        cache.set(f'hrms_employee_children_{user}', json.dumps(users))
+    cache.set('hrms_employee_children', df_.to_json())
 
-        report_to_user_list = df.reports_to_user.dropna().drop_duplicates().to_list()
-        for user_id in report_to_user_list:
-            users = df.user_id[((df['reports_to_user']==user_id)|(df['reports_to_user_2']==user_id)|(df['reports_to_user_3']==user_id)|(df['reports_to_user_4']==user_id)|(df['reports_to_user_5']==user_id))&(~df['user_id'].isna())].drop_duplicates().to_list()
-            cache.set(f'hrms_employee_children_{user_id}', json.dumps(users))
-        cache.set('hrms_employee_children', df.to_json())
-
-    if frappe.cache.get('hrms_employee_children') != None:
-        last_dt=frappe.db.get_all('Employee',fields = ['max(modified) as max_dt'],as_list=True)[0][0]
-        df = pd.DataFrame(json.loads(frappe.cache.get('hrms_employee_children')))
-        cache_dt = datetime.datetime.fromtimestamp(df.modified.max()/1000)
-        dt_diff = (last_dt - cache_dt)
-        if dt_diff.seconds <20:
-            return 
-    run()
 
 @frappe.whitelist()
 def get_employee_tree(parent, 
@@ -179,14 +179,10 @@ def get_employee_tree(parent,
 
     is_root: False
     '''
-    users = []
-    if is_root:
-        # 树的最顶点
-        parent = 'zhukunfu@zhushigroup.cn'
     try:
         users = json.loads(frappe.cache.get(f'hrms_employee_children_{parent}'))
     except:
-        pass
+        users = []
     return users
 
     
