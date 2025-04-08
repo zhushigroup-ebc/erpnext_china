@@ -1,0 +1,201 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "format:ATT-LOG-{employee}-{YY}-{MM}-{#####}",
+ "creation": "2024-12-19 22:54:34.340585",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_v4og",
+  "employee",
+  "employee_name",
+  "department",
+  "column_break_njsw",
+  "attendance_date",
+  "column_break_uwbr",
+  "company",
+  "section_break_wtgh",
+  "expected_attendance_days",
+  "column_break_skgx",
+  "attendance_days",
+  "section_break_icvt",
+  "attendance_importer",
+  "column_break_txlr",
+  "file",
+  "column_break_cvym",
+  "file_url",
+  "column_break_gwde",
+  "sheet_name",
+  "section_break_ubzw",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_v4og",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Department",
+   "options": "Department",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_njsw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attendance_date",
+   "fieldtype": "Date",
+   "label": "Attendance Date",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_uwbr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_wtgh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "expected_attendance_days",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Expected Attendance Days",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_skgx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attendance_days",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Attendance Days",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_icvt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "attendance_importer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Attendance Importer",
+   "options": "Attendance Importer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_txlr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "file",
+   "fieldtype": "Link",
+   "label": "File",
+   "options": "File",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cvym",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "file.file_url",
+   "fieldname": "file_url",
+   "fieldtype": "Read Only",
+   "label": "File URL"
+  },
+  {
+   "fieldname": "column_break_gwde",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sheet_name",
+   "fieldtype": "Data",
+   "label": "Sheet Name"
+  },
+  {
+   "fieldname": "section_break_ubzw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Attendance Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "in_create": 1,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-08 16:30:42.858714",
+ "modified_by": "Administrator",
+ "module": "hrms_china",
+ "name": "Attendance Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
