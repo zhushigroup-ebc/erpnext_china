@@ -3,8 +3,8 @@
         <div class="title">线索跟进不及时惩罚机制：</div>
         <div class="content">
             <p>每晚22:00进行线索跟进时间分析</p>
-            <p>1、昨日8:00-昨日21:00之间的线索，如果在分配后36分钟内未及时跟进，则暂停自动分配线索7天。</p>
-            <p>2、昨日21:00-今日8:00之间的线索，（凌晨线索客户极大可能在睡觉，建议大家先加微信，ebc备注添加微信，十点左右再打电话）如果在分配后至今日11:00仍未跟进，则暂停自动分配线索7天。</p>
+            <p>1、昨日8:00-昨日21:00之间的线索，如果在分配后36分钟内未及时跟进，则暂停自动分配线索3天。</p>
+            <p>2、昨日21:00-今日8:00之间的线索，（凌晨线索客户极大可能在睡觉，建议大家先加微信，ebc备注添加微信，十点左右再打电话）如果在分配后至今日11:00仍未跟进，则暂停自动分配线索3天。</p>
         </div>
     </div>
     {% if ([frappe.pages.Lead.frm.doc.owner, "Administrator", frappe.pages.Lead.frm.doc.lead_owner, "jintingyan@zhushigroup.cn", "wangjiali@zhushigroup.cn"].includes(frappe.session.user) || frappe.user.has_role("网络推广管理")) { %}
