@@ -12,7 +12,7 @@ class CustomPurchaseOrder(PurchaseOrder):
 		pass
 
 def make_internal_sales_order(doc, method):
-	if frappe.db.get_single_value("Selling Settings", "allow_generate_inter_company_transactions"):
+	if frappe.db.get_single_value("Selling Settings", "allow_generate_inter_company_transactions") and doc.is_internal_supplier:
 		current_user = frappe.session.user
 		frappe.set_user("Administrator")
 		sales_order = make_inter_company_transaction('Purchase Order',doc.name,target_doc=None)
