@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-08 16:36:01.975816",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sid",
+  "app_key",
+  "app_secret"
+ ],
+ "fields": [
+  {
+   "fieldname": "sid",
+   "fieldtype": "Password",
+   "label": "Sid"
+  },
+  {
+   "fieldname": "app_key",
+   "fieldtype": "Password",
+   "label": "App Key"
+  },
+  {
+   "fieldname": "app_secret",
+   "fieldtype": "Password",
+   "label": "App Secret"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-04-09 17:50:14.665752",
+ "modified_by": "Administrator",
+ "module": "ERPNext China",
+ "name": "Wangdian Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
