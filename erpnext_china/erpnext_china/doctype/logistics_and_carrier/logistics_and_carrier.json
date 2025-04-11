@@ -8,6 +8,7 @@
  "field_order": [
   "abbr",
   "supplier",
+  "kaidi100_company_code",
   "section_break_hvbq",
   "logistics_and_carrier_detail",
   "section_break_khxm",
@@ -44,12 +45,17 @@
    "fieldname": "freight_calculation_method",
    "fieldtype": "Code",
    "label": "Freight Calculation Method"
+  },
+  {
+   "fieldname": "kaidi100_company_code",
+   "fieldtype": "Data",
+   "label": "Kaidi100 Company Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-25 17:11:20.543226",
+ "modified": "2025-04-09 16:29:41.490862",
  "modified_by": "Administrator",
  "module": "ERPNext China",
  "name": "Logistics And Carrier",
