@@ -45,14 +45,6 @@ def make_internal_sales_order(doc, method):
 			flags={"ignore_share_permission": True}
 		)
 		
-		msg = f"""
-			<div>
-			<h5>已自动生成内部销售订单</h5>
-			<a href="/app/sales-order/{sales_order.name}" target="_blank">{sales_order.name}</a>
-			</div>
-		"""
-
-		frappe.msgprint(msg,alert=1)
 		frappe.set_user(current_user)
 
 def validate_delivery_date(sales_order,purchase_order):

@@ -405,29 +405,28 @@ def make_internal_purchase_order(doc,method=None):
         current_user = frappe.session.user
         frappe.set_user("Administrator")
         purchase_orders = make_purchase_order_for_default_supplier(doc.name, items)
-        msg = f"""
-            <h5>已自动生成{len(purchase_orders)}张采购订单</h5>
-        """
         for po in purchase_orders:
             validate_po_item_price(po,doc)
             po.save()
             po.db_set('owner',doc.owner)
             po.submit()
-            msg += f"""
-                <a href="/app/purchase-order/{po.name}" target="_blank">{po.name}</a>
-            """
-        frappe.msgprint(f"""<div>{msg}<div>""",alert=1)
         frappe.set_user(current_user)
 
 def validate_po_item_price(po,so):
-    if frappe.get_all('Price List',filters={'buying':1,'selling':1,'currency':so.currency}):
-        for d in po.items:
-            if d.rate == 0:
-                so_rate = [soi.rate for soi in so.items if soi.name == d.sales_order_item][0]
-                d.rate = so_rate
-        if so.apply_discount_on and so.discount_amount:
-            po.apply_discount_on = so.apply_discount_on
-            po.discount_amount = so.discount_amount
+    total_discount = 0
+    for soi in so.items:
+        for poi in po.items:
+            if poi.sales_order_item == soi.name:
+                if poi.amount != soi.custom_after_distinct__amount_request:
+                    total_discount += soi.amount - soi.custom_after_distinct__amount_request
+                poi.update({
+                    'rate':soi.rate,
+                    'amount':soi.amount,
+                })
+
+    if total_discount > 0:
+        po.apply_discount_on = so.apply_discount_on
+        po.discount_amount = total_discount
 
 @frappe.whitelist()
 def set_custom_important_reminders(docname, note):
