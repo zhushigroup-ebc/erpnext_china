@@ -1,0 +1,42 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2025-04-12 16:20:05.161732",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "contact_nane",
+  "contact_info"
+ ],
+ "fields": [
+  {
+   "fieldname": "contact_nane",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contact Nane"
+  },
+  {
+   "fieldname": "contact_info",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contact Info"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-12 16:35:50.600046",
+ "modified_by": "Administrator",
+ "module": "ERPNext China",
+ "name": "Contact List",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
