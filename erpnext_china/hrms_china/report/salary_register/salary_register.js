@@ -63,7 +63,7 @@ frappe.query_reports["Salary Register"] = {
 		me = this
 		me.salary_components_list = []
 		frappe.call({
-			method:"salary_calc.salary_calc.report.salary_register.salary_register.get_salary_components_list",
+			method:"erpnext_china.hrms_china.report.salary_register.salary_register.get_salary_components_list",
 			// args:{},
 			callback:(r)=>{
 				
