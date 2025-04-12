@@ -7,15 +7,15 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "contact_nane",
+  "contact_name",
   "contact_info"
  ],
  "fields": [
   {
-   "fieldname": "contact_nane",
+   "fieldname": "contact_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Contact Nane"
+   "label": "Contact Name"
   },
   {
    "fieldname": "contact_info",
