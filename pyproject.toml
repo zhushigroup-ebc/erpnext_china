@@ -17,6 +17,7 @@ dependencies = [
     "sqlalchemy==1.4.27",
     "aliyun-python-sdk-core==2.16.0",
     "aliyun-python-sdk-address-purification",
+    "tencentcloud-sdk-python",
 ]
 
 [build-system]
