@@ -8,7 +8,6 @@ import frappe.utils
 from erpnext_china.erpnext_china.custom_form_script.lead import auto_allocation
 import requests
 import json
-import os
 from tencentcloud.common import credential
 from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
 from tencentcloud.cvm.v20170312 import cvm_client, models
