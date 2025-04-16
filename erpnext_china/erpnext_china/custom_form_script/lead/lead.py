@@ -255,10 +255,10 @@ class CustomLead(Lead):
 						note.custom_socre = socre
 					else:
 						try:
-							socre = int(sse_client(note.note))
+							note.custom_socre = int(sse_client(note.note))
 						except:
 							pass
-					if socre == 1:
+					if note.custom_socre == 1:
 						note.custom_useful = 1
 
 
