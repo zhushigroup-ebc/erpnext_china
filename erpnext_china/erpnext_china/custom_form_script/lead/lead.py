@@ -231,34 +231,35 @@ class CustomLead(Lead):
 			data = json.loads(resp.content.decode('utf-8').split("\n")[-3].replace('data:',''))['payload']['content']
 			return data
 
-		for note in self.notes:
-			if note.custom_note_type in ['销售反馈','客服反馈'] and  not note.custom_socre :
-				try:
-					# 从已有的评分中计算
-					socre = frappe.db.sql(f''' select sum(custom_socre)/count(custom_socre) as socre from `tabCRM Note` 
-							where custom_socre is not null
-							and note = '{note.note}' ''',as_dict=1)
-					socre = socre[0]['socre']
-					if socre == None:
-						pass
-					elif socre >=0.5:
-						socre = 1
-					elif 0 <= socre < 0.5:
-						socre = 0
-					else:
-						socre = None
-				except:
-					socre = None
-
-				if socre:
-					note.custom_socre = socre
-				else:
+		if frappe.db.get_single_value('Lead Settings','is_the_ai_identified_lead_reliable') == 1:
+			for note in self.notes:
+				if note.custom_note_type in ['销售反馈','客服反馈'] and  not note.custom_socre :
 					try:
-						socre = int(sse_client(note.note))
+						# 从已有的评分中计算
+						socre = frappe.db.sql(f''' select sum(custom_socre)/count(custom_socre) as socre from `tabCRM Note` 
+								where custom_socre is not null
+								and note = '{note.note}' ''',as_dict=1)
+						socre = socre[0]['socre']
+						if socre == None:
+							pass
+						elif socre >=0.5:
+							socre = 1
+						elif 0 <= socre < 0.5:
+							socre = 0
+						else:
+							socre = None
 					except:
-						pass
-				if socre == 1:
-					note.custom_useful = 1
+						socre = None
+
+					if socre:
+						note.custom_socre = socre
+					else:
+						try:
+							socre = int(sse_client(note.note))
+						except:
+							pass
+					if socre == 1:
+						note.custom_useful = 1
 
 
 
