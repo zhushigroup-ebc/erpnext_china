@@ -5,16 +5,25 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "\u6388\u6743\u4fe1\u606f_section",
   "authorization_code",
   "customer",
+  "secret",
+  "userid",
+  "intellectualized_judge",
+  "\u7269\u6d41\u8ba2\u9605\u8bf7\u6c42\u5730\u5740\u53ca\u56de\u8c03\u5730\u5740_section",
   "subscription_request_url",
-  "callback_request_url"
+  "callback_request_url",
+  "\u7535\u5b50\u9762\u5355_section",
+  "parterid",
+  "partnerkey",
+  "net"
  ],
  "fields": [
   {
    "fieldname": "customer",
    "fieldtype": "Password",
-   "label": "Customer"
+   "label": "customer"
   },
   {
    "fieldname": "subscription_request_url",
@@ -29,14 +38,59 @@
   {
    "fieldname": "authorization_code",
    "fieldtype": "Password",
-   "label": "Authorization Code"
+   "label": "\u6388\u6743key"
+  },
+  {
+   "fieldname": "secret",
+   "fieldtype": "Password",
+   "label": "secret"
+  },
+  {
+   "fieldname": "userid",
+   "fieldtype": "Password",
+   "label": "userid"
+  },
+  {
+   "fieldname": "intellectualized_judge",
+   "fieldtype": "Password",
+   "label": "\u667a\u80fd\u5224\u65ad"
+  },
+  {
+   "fieldname": "\u6388\u6743\u4fe1\u606f_section",
+   "fieldtype": "Section Break",
+   "label": "\u6388\u6743\u4fe1\u606f"
+  },
+  {
+   "fieldname": "\u7269\u6d41\u8ba2\u9605\u8bf7\u6c42\u5730\u5740\u53ca\u56de\u8c03\u5730\u5740_section",
+   "fieldtype": "Section Break",
+   "label": "\u7269\u6d41\u8ba2\u9605\u8bf7\u6c42\u5730\u5740\u53ca\u56de\u8c03\u5730\u5740"
+  },
+  {
+   "fieldname": "\u7535\u5b50\u9762\u5355_section",
+   "fieldtype": "Section Break",
+   "label": "\u7535\u5b50\u9762\u5355"
+  },
+  {
+   "fieldname": "parterid",
+   "fieldtype": "Password",
+   "label": "parterId"
+  },
+  {
+   "fieldname": "partnerkey",
+   "fieldtype": "Password",
+   "label": "partnerKey"
+  },
+  {
+   "fieldname": "net",
+   "fieldtype": "Data",
+   "label": "net"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-10 09:38:38.036947",
+ "modified": "2025-04-17 14:47:15.963060",
  "modified_by": "Administrator",
  "module": "ERPNext China",
  "name": "Kuaidi100 Settings",
@@ -53,6 +107,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
