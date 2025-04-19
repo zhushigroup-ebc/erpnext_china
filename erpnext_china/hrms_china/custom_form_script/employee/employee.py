@@ -143,6 +143,10 @@ def scheduled_tasks_employee_children():
     for user_id in report_to_user_list:
         users = df.user_id[((df['reports_to_user']==user_id)|(df['reports_to_user_2']==user_id)|(df['reports_to_user_3']==user_id)|(df['reports_to_user_4']==user_id)|(df['reports_to_user_5']==user_id))&(~df['user_id'].isna())].drop_duplicates().to_list()
         cache.set(f'hrms_employee_children_{user_id}', json.dumps(users))
+    for user_id in report_to_user_list:
+        users = df.name[((df['reports_to_user']==user_id)|(df['reports_to_user_2']==user_id)|(df['reports_to_user_3']==user_id)|(df['reports_to_user_4']==user_id)|(df['reports_to_user_5']==user_id))&(~df['user_id'].isna())].drop_duplicates().to_list()
+        cache.set(f'hrms_employee_children_emp_{user_id}', json.dumps(users))
+    
     cache.set('hrms_employee_children', df.to_json())
     for user_id in df.user_id.dropna().drop_duplicates().to_list():
         parents = df[df.user_id==user_id][['user_id','reports_to_user','reports_to_user_2','reports_to_user_3','reports_to_user_4','reports_to_user_5']].iloc[0].dropna().drop_duplicates().to_list()
@@ -151,12 +155,12 @@ def scheduled_tasks_employee_children():
 
 @frappe.whitelist()
 def get_employee_tree(parent, 
-                    pluck = 'email',
+                    pluck = 'userid',
+                    has_parent = False,
                     orient = 'list',
                     levle = None,
                     is_root = None,
-                    use_cache = False,
-                    has_parent = False):
+                    use_cache = False):
     '''
     注意：io压力增加时进一步优化缓存缓存内容
 
@@ -165,9 +169,8 @@ def get_employee_tree(parent,
         key: email|userid|username
         value: 唯一标识的值
 
-    pluck: default 'email' 返回的字段名
-        email|userid|username
-
+    pluck: userid|employee
+    has_parent True|False
     orient: list|dict , 是否返回树状结构
 
     levle: all|int ,返回多少层级的信息
@@ -175,13 +178,21 @@ def get_employee_tree(parent,
     is_root: False
     '''
     users = []
-    if is_root:
-        # 树的最顶点
-        parent = 'zhukunfu@zhushigroup.cn'
+    cache_path = {'userid':'hrms_employee_children',
+                'employee':'hrms_employee_children_emp'}
+
     try:
-        users = json.loads(frappe.cache.get(f'hrms_employee_children_{parent}'))
+        users = json.loads(frappe.cache.get(f'{ cache_path[pluck] }_{ parent }'))
+        if has_parent:
+            if pluck == 'userid':
+                users.append(user)
+            elif pluck == 'employee':
+                emp_json = json.loads(frappe.cache.get(f'hrms_employee_children'))
+                df = pd.DataFrame(emp_json)
+                emp = df.name[df.user_id==user].iloc[0]
+                users.append(emp)
+            else:
+                pass
     except:
         pass
     return users
-
-    
