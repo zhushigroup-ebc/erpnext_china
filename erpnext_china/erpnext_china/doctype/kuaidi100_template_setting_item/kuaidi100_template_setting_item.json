@@ -1,0 +1,63 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-18 14:54:11.145494",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "logistics_and_carrier",
+  "kaidi100_company_code",
+  "temp_id",
+  "third_template_url",
+  "other"
+ ],
+ "fields": [
+  {
+   "fieldname": "logistics_and_carrier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Logistics And Carrier",
+   "options": "Logistics And Carrier",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "temp_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Temp Id"
+  },
+  {
+   "fieldname": "third_template_url",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Third Template URL"
+  },
+  {
+   "fieldname": "other",
+   "fieldtype": "JSON",
+   "label": "Other"
+  },
+  {
+   "fieldname": "kaidi100_company_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Kaidi100 Company Code"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-18 16:12:36.277761",
+ "modified_by": "Administrator",
+ "module": "ERPNext China",
+ "name": "Kuaidi100 Template Setting Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

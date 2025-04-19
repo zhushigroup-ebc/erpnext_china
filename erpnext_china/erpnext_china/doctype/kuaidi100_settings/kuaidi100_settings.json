@@ -15,9 +15,12 @@
   "subscription_request_url",
   "callback_request_url",
   "\u7535\u5b50\u9762\u5355_section",
+  "label_order_request_url",
   "parterid",
   "partnerkey",
-  "net"
+  "net",
+  "\u7269\u6d41\u516c\u53f8\u914d\u7f6e_section",
+  "items"
  ],
  "fields": [
   {
@@ -84,13 +87,29 @@
    "fieldname": "net",
    "fieldtype": "Data",
    "label": "net"
+  },
+  {
+   "fieldname": "\u7269\u6d41\u516c\u53f8\u914d\u7f6e_section",
+   "fieldtype": "Section Break",
+   "label": "\u7269\u6d41\u516c\u53f8\u914d\u7f6e"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Kuaidi100 Template Setting Item"
+  },
+  {
+   "fieldname": "label_order_request_url",
+   "fieldtype": "Data",
+   "label": "Label Order Request Url"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-17 14:47:15.963060",
+ "modified": "2025-04-19 10:11:08.839062",
  "modified_by": "Administrator",
  "module": "ERPNext China",
  "name": "Kuaidi100 Settings",
