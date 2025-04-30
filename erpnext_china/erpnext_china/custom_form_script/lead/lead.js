@@ -156,15 +156,15 @@ frappe.ui.form.on('Lead', {
             const help_box = $(wrapper).find(".help-box");
             if (help_box) {
                 const help_box_text = help_box.text();
-                $(help_box).empty();
+                help_box.empty();
                 if(frm.doc[field]) {
                     if (field == 'custom_wechat') {
-                        const $description_html = $(`<span style="background-color: var(--control-bg);border-radius: 5px;padding: 3px 8px;cursor: copy;">${help_box_text}</span>`).appendTo(help_box);
+                        const $description_html = $(`<span style="background-color: var(--control-bg);border-radius: 5px;padding: 3px 8px;cursor: copy;">${help_box_text || "立即复制"}</span>`).appendTo(help_box);
                         $description_html.click(()=>{
                             frappe.utils.copy_to_clipboard(frm.doc[field])
                         })
                     } else {
-                        $(`<a style="background-color: var(--control-bg);border-radius: 5px;padding: 3px 8px;" href='tel:${frm.doc[field]}'>${help_box_text}</a>`).appendTo(help_box);
+                        $(`<a style="background-color: var(--control-bg);border-radius: 5px;padding: 3px 8px;" href='tel:${frm.doc[field]}'>${help_box_text || "立刻拨打"}</a>`).appendTo(help_box);
                     }
                 }
             }
