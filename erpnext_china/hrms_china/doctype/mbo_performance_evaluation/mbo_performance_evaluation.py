@@ -9,22 +9,27 @@ from frappe.model.document import Document
 class MBOPerformanceEvaluation(Document):
 
 	def set_missing_value(self):
+		employee = None
 		if not self.employee:
 			employee = frappe.db.get_value("Employee", {
 				"user_id": frappe.session.user
 			}, 
 			["name", "department", "designation", "reports_to", "user_id", "first_name"], 
 			as_dict=True)
-			if employee:
-				self.employee = employee.name
-				self.department = employee.department
-				self.designation = employee.designation
-				self.user = employee.user_id
-				self.employee_name = employee.first_name
-				self.reports_to = employee.reports_to
-				reports_to_user = frappe.db.get_value("Employee", {"name": employee.reports_to}, "user_id")
-				if reports_to_user:
-					self.reports_to_user = reports_to_user
+
+		if not self.user:
+			employee = frappe.get_doc("Employee", self.employee)
+
+		if employee:
+			self.employee = employee.name
+			self.department = employee.department
+			self.designation = employee.designation
+			self.user = employee.user_id
+			self.employee_name = employee.first_name
+			self.reports_to = employee.reports_to
+			reports_to_user = frappe.db.get_value("Employee", {"name": employee.reports_to}, "user_id")
+			if reports_to_user:
+				self.reports_to_user = reports_to_user
 
 	def validate_score(self):
 		total_score = 0

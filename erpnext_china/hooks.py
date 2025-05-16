@@ -76,12 +76,14 @@ permission_query_conditions = {
     "Original Leads": "erpnext_china.erpnext_china.custom_permission.original_lead.permission_original_lead.has_query_permission",
     "Contact": "erpnext_china.erpnext_china.custom_permission.contact.permission_contact.has_query_permission",
     "Lead Source": "erpnext_china.erpnext_china.custom_permission.lead_source.permission_lead_source.has_query_permission",
+    "MBO Performance Evaluation": "erpnext_china.hrms_china.custom_permission.permission_mbo_performance_evaluation.has_query_permission",
 }
 
 has_permission = {
     "Original Leads": "erpnext_china.erpnext_china.custom_permission.original_lead.permission_original_lead.has_permission",
     "Contact": "erpnext_china.erpnext_china.custom_permission.contact.permission_contact.has_permission",
     "Lead Source": "erpnext_china.erpnext_china.custom_permission.lead_source.permission_lead_source.has_permission",
+    "MBO Performance Evaluation": "erpnext_china.hrms_china.custom_permission.permission_mbo_performance_evaluation.has_permission",
 }
 
 # doc_events = {
