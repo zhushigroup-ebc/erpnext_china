@@ -29,6 +29,9 @@ scheduler_events = {
         "*/5 * * * *": [
 			"erpnext_china.utils.timed_tasks.task_get_check_in_data",
 		],
+        "*/30 * * * *": [
+			"erpnext_china.utils.timed_tasks.task_get_checkin_day_data",
+		],
         "0 0 * * *": [
 			"erpnext_china.utils.timed_tasks.task_check_user_in_wecom",
 		],

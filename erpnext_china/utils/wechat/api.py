@@ -91,6 +91,20 @@ def get_check_in_data(access_token: str, users: list[str], starttime: int, endti
 	return result.get('checkindata', [])
 
 
+def get_checkin_daydata_records(access_token, starttime, endtime, useridlist):
+	"""获取打卡日报数据"""
+	checkin_url = f"https://qyapi.weixin.qq.com/cgi-bin/checkin/getcheckin_daydata?access_token={access_token}"
+	params = {
+		"starttime": starttime,
+		"endtime": endtime,
+		"useridlist": useridlist
+	}
+	checkin_response = requests.post(checkin_url, json=params)
+	checkin_response.raise_for_status() 
+	result = checkin_response.json()
+	return result.get('datas', [])
+
+
 def get_departments(access_token: str):
 	url = 'https://qyapi.weixin.qq.com/cgi-bin/department/list'
 	params = {

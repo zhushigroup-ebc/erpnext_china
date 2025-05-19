@@ -40,35 +40,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "\u85aa\u916c",
-   "link_count": 2,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Salary Slip",
-   "link_count": 0,
-   "link_to": "Salary Slip",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Salary Component",
-   "link_count": 0,
-   "link_to": "Salary Component",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "\u5458\u5de5",
    "link_count": 5,
    "link_type": "DocType",
@@ -128,6 +99,36 @@
   {
    "hidden": 0,
    "is_query_report": 0,
+   "label": "\u85aa\u8d44\u6784\u6210\u9879",
+   "link_count": 0,
+   "link_to": "Salary Component",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "\u5de5\u8d44\u53f0\u8d26",
+   "link_count": 0,
+   "link_to": "Salary Register",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "\u7ee9\u6548\u8003\u6838",
+   "link_count": 0,
+   "link_to": "MBO Performance Evaluation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "\u8003\u52e4",
    "link_count": 4,
    "link_type": "DocType",
@@ -157,9 +158,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "\u8003\u52e4\u89c4\u5219",
+   "label": "\u8003\u52e4\u65e5\u62a5",
    "link_count": 0,
-   "link_to": "Checkin Group",
+   "link_to": "Employee Checkin Day Data",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -167,15 +168,15 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "\u8003\u52e4\u6807\u7b7e",
+   "label": "\u8003\u52e4\u89c4\u5219",
    "link_count": 0,
-   "link_to": "Checkin Tag",
+   "link_to": "Employee Checkin Group",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2024-10-13 16:09:39.945953",
+ "modified": "2025-05-19 09:55:51.865719",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "HRMS",
@@ -195,7 +196,7 @@
    "role": "HR Manager"
   }
  ],
- "sequence_id": 15.0,
+ "sequence_id": 20.0,
  "shortcuts": [
   {
    "color": "Green",
