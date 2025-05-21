@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-17 09:27:52.656726",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_name",
+  "date",
+  "employee",
+  "department",
+  "user",
+  "acctid",
+  "record_type",
+  "column_break_exol",
+  "group_name",
+  "group_id",
+  "schedule_name",
+  "schedule_id",
+  "section_break_dqyj",
+  "raw",
+  "unique_id",
+  "result"
+ ],
+ "fields": [
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "record_type",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Record Type"
+  },
+  {
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "User",
+   "options": "User",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "acctid",
+   "fieldtype": "Data",
+   "label": "Acctid",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_exol",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "group_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Group Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "schedule_id",
+   "fieldtype": "Data",
+   "label": "Schedule ID",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "schedule_name",
+   "fieldtype": "Data",
+   "label": "Schedule Name"
+  },
+  {
+   "fieldname": "section_break_dqyj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "raw",
+   "fieldtype": "JSON",
+   "label": "Raw",
+   "permlevel": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "unique_id",
+   "fieldtype": "Data",
+   "label": "Unique ID",
+   "permlevel": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "group_id",
+   "fieldtype": "Data",
+   "label": "Group ID",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "result",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Result"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-19 11:47:53.052528",
+ "modified_by": "Administrator",
+ "module": "hrms_china",
+ "name": "Employee Checkin Day Data",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

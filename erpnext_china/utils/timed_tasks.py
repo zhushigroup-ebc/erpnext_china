@@ -1,6 +1,8 @@
 import math
 import json
+import hashlib
 from datetime import datetime
+import calendar
 
 import frappe
 
@@ -17,8 +19,16 @@ def add_employee_checkin_log(check_in_data, code, employee):
 		"employee": employee,
 		"checkin_time": checkin_time,
 		"code": code,
-		"exception_type": exception_type
+		"group_id": check_in_data.get('groupid', ''),
+		"schedule_id": check_in_data.get('schedule_id', ''),
+		"timeline_id": check_in_data.get('timeline_id', ''),
+		"group_name": check_in_data.get('groupname', ''),
+		"exception_type": exception_type,
+		"raw": check_in_data
 	}
+	sch_checkin_time = check_in_data.get('sch_checkin_time')
+	if sch_checkin_time:
+		doc_data.update({"schedule_checkin_time": datetime.fromtimestamp(sch_checkin_time)})
 
 	checkin_type = check_in_data.get('checkin_type')
 	address = ','.join([check_in_data.get('location_title', ''), check_in_data.get('location_detail', '')])
@@ -56,13 +66,12 @@ def get_temp_users():
 	没有梳理好Employee和User中的数据时，暂时用
 	"""
 	users_id = [
-		"bianxuezhen@zhushigroup.cn",
-		"wangzhenhua@zhushigroup.cn",
-		"lichengxi@zhushigroup.cn",
-		"limingyuan@zhushigroup.cn",
+		"lilingyu@zhushigroup.cn",
+		"yinzhenjiang@zhushigroup.cn",
+		"wangmiao@zhushigroup.cn",
 		"lixiulu@zhushigroup.cn",
 		"houjun@zhushigroup.cn",
-		"dongjuanjuan@zhushigroup.cn",
+		"liuyangguang@zhushigroup.cn",
 		"liziyuan@zhushigroup.cn",
 		"yangzhen@zhushigroup.cn",
 		"liuchao@zhushigroup.cn"
@@ -126,17 +135,18 @@ def get_exists_count(users, start_time, end_time):
 
 
 @frappe.whitelist(allow_guest=True)
-def task_get_check_in_data():
+def task_get_check_in_data(start_time=None, end_time=None):
 	# [{user, employee, wecom}]
-	all_users = get_all_active_users()
-	# all_users = get_temp_users()
+	# all_users = get_all_active_users()
+	all_users = get_temp_users()
 	setting = frappe.get_doc("WeCom Setting")
 	access_token = setting.access_token
-	
+	access_token = "hTJZxvHRiMTpIA6nfvRUjsjiKFucC09SmglDT57APkGCoSRcZJjQ3Z0EFuuzfFk6wBf5t1afS7wq0ujioMvkGme2lNV68V8wuSA1FtjTnz5rmBZQ3oe0RS-Mo6KcZi50inQ9JZ2yTM0X48GQBjo_QJIT366Jy-1t8ca5zeg-Zr3i2oqnWNIt0p1VzsXX29Lh3RPKHQk2zk3ycZs7Vasdbw"
 	if not access_token:
 		return
 	
-	start_time, end_time = get_today_timestamp()
+	if not start_time or not end_time:
+		start_time, end_time = get_today_timestamp()
 	
 	# [[0-100],[100-200],[200-267]]
 	user_slices = get_user_slices(all_users)
@@ -174,6 +184,123 @@ def disable_user(name):
 	except:  # 有的可能因为信息不全在保存时报错
 		pass
 
+@frappe.whitelist(allow_guest=True)
+def task_get_checkin_day_data(first_day=None, last_day=None):
+	# all_users = get_all_active_users()
+	all_users = get_temp_users()
+	setting = frappe.get_doc("WeCom Setting")
+	access_token = setting.access_token
+	access_token = "hTJZxvHRiMTpIA6nfvRUjsjiKFucC09SmglDT57APkGCoSRcZJjQ3Z0EFuuzfFk6wBf5t1afS7wq0ujioMvkGme2lNV68V8wuSA1FtjTnz5rmBZQ3oe0RS-Mo6KcZi50inQ9JZ2yTM0X48GQBjo_QJIT366Jy-1t8ca5zeg-Zr3i2oqnWNIt0p1VzsXX29Lh3RPKHQk2zk3ycZs7Vasdbw"
+	
+	if not access_token:
+		return
+	
+	# 可以指定日期
+	if not first_day or not last_day:
+		first_day, last_day = get_current_month_first_last_day()
+	
+	# [[0-100],[100-200],[200-267]]
+	user_slices = get_user_slices(all_users)
+
+	groups = frappe.get_all("Employee Checkin Group", fields=["group_name", "group_id"])
+	existing_groups = {(group.group_name, str(group.group_id)) for group in groups}
+	for users in user_slices:
+		users_id = [user.get("wecom") for user in users]
+		# 同步日报
+		results = api.get_checkin_daydata_records(access_token, first_day, last_day, users_id)
+		wecom_uids = [result['base_info']['acctid'] for result in results]
+		user_ids = frappe.get_all("User", filters={"custom_wecom_uid": ['in', wecom_uids]}, fields=["name", "custom_wecom_uid"])
+		wecom_uid_user_id = {u.custom_wecom_uid: u.name for u in user_ids}
+		employee_ids = frappe.get_all("Employee", filters={"user_id": ["in", [u.name for u in user_ids]]}, fields=["name", "user_id", "department"])
+		user_id_employee_id = {e.user_id: {'name': e.name, 'department': e.department} for e in employee_ids}
+
+		doctype = "Employee Checkin Day Data"
+		checkin_groups = {r['base_info']['rule_info']['groupname']:r['base_info']['rule_info']['groupid'] for r in results}
+		add_checkin_group(existing_groups, checkin_groups)
+		for result in results:
+			new_unique_id = hashlib.md5(json.dumps(result).encode()).hexdigest()
+			base_info = result['base_info']
+			rule_info = base_info['rule_info']
+			
+			if frappe.db.get_value(doctype, {"unique_id": new_unique_id}):
+				continue
+			
+			add_employee_checkin_day_data(result, base_info, rule_info, user_id_employee_id, wecom_uid_user_id, new_unique_id)
+
+
+def get_current_month_first_last_day():
+	
+	today = datetime.today()
+
+	first_day_of_month = datetime(today.year, today.month, 1)
+
+	_, last_day_of_month = calendar.monthrange(today.year, today.month)
+	last_day_of_month = datetime(today.year, today.month, last_day_of_month)
+
+	return int(first_day_of_month.timestamp()), int(last_day_of_month.timestamp())
+
+def get_record_type(type_id):
+	if not type_id:
+		return '未知'
+	record_types = {
+		'1': '固定上下班',
+		'2': '外出',
+		'3': '按班次上下班',
+		'4': '自由签到',
+		'5': '加班',
+		'7': '无规则'
+	}
+	return record_types.get(str(type_id))
+
+
+def add_employee_checkin_day_data(result, base_info, rule_info, user_id_employee_id, wecom_uid_user_id, new_unique_id):
+	doctype = "Employee Checkin Day Data"
+	wecom_uid = base_info['acctid']
+	info_date = timestamp_to_str(base_info['date'])
+	day_data = frappe.db.get_value(doctype, filters={"date": info_date, 'acctid': wecom_uid}, fieldname=["name", "unique_id"], as_dict=True)
+
+	info = {
+		'date': info_date,
+		'employee_name': base_info['name'],
+		'employee': user_id_employee_id[wecom_uid_user_id[wecom_uid]]['name'],
+		'department': user_id_employee_id[wecom_uid_user_id[wecom_uid]]['department'],
+		'user': wecom_uid_user_id[wecom_uid],
+		'acctid': wecom_uid,
+		'record_type': get_record_type(base_info['record_type']),
+		'group_name': rule_info['groupname'],
+		'group_id': rule_info['groupid'],
+		'schedule_name': rule_info['schedulename'],
+		'schedule_id': rule_info['scheduleid'],
+		'unique_id': new_unique_id,
+		'raw': result
+	}
+
+	if day_data and new_unique_id != day_data.unique_id:
+		# 更新
+		doc = frappe.get_doc(doctype, day_data.name)
+		for k, v in info.items():
+			setattr(doc, k, v)
+		doc.save(ignore_permissions=True)
+	else:
+		# 插入
+		doc = frappe.new_doc(doctype)
+		for k, v in info.items():
+			setattr(doc, k, v)
+		doc.insert(ignore_permissions=True)
+
+	frappe.db.commit()
+
+
+def add_checkin_group(existing_groups, checkin_groups):
+
+	for group_name, group_id in checkin_groups.items():
+		group_id_str = str(group_id)
+		if (group_name, group_id_str) not in existing_groups:
+			doc = frappe.new_doc("Employee Checkin Group")
+			doc.group_name = group_name
+			doc.group_id = group_id_str
+			doc.insert(ignore_permissions=True)
+			
 
 @frappe.whitelist(allow_guest=True)
 def task_check_user_in_wecom():

@@ -7,17 +7,25 @@
  "field_order": [
   "employee",
   "employee_name",
-  "log_type",
-  "code",
-  "exception_type",
-  "column_break_fmyu",
   "checkin_time",
+  "schedule_checkin_time",
+  "group_id",
+  "group_name",
+  "schedule_id",
+  "timeline_id",
+  "log_type",
+  "exception_type",
+  "code",
+  "column_break_fmyu",
   "location_or_device_id",
   "address",
   "longitude",
   "latitude",
   "image",
-  "explanation"
+  "explanation",
+  "section_break_gdgt",
+  "raw",
+  "result"
  ],
  "fields": [
   {
@@ -103,11 +111,52 @@
    "fieldtype": "Data",
    "label": "Exception Type",
    "read_only": 1
+  },
+  {
+   "fieldname": "schedule_checkin_time",
+   "fieldtype": "Datetime",
+   "label": "Schedule Checkin Time"
+  },
+  {
+   "fieldname": "group_id",
+   "fieldtype": "Data",
+   "label": "Group ID"
+  },
+  {
+   "fieldname": "schedule_id",
+   "fieldtype": "Data",
+   "label": "Schedule ID"
+  },
+  {
+   "fieldname": "timeline_id",
+   "fieldtype": "Data",
+   "label": "Timeline ID"
+  },
+  {
+   "fieldname": "raw",
+   "fieldtype": "JSON",
+   "label": "Raw"
+  },
+  {
+   "fieldname": "section_break_gdgt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "result",
+   "fieldtype": "JSON",
+   "label": "Result"
+  },
+  {
+   "fieldname": "group_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Group Name"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-24 09:31:09.447025",
+ "modified": "2025-05-21 15:46:09.229329",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "Employee Checkin Log",
@@ -127,6 +176,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
