@@ -1,5 +1,5 @@
 ## ERPNext China Location（ERPNext中国本地化）
-
+# 稳定版本暂时闭源，有时间了放出来
 
 ### 功能介绍
 #### 默认开启的功能：
@@ -9,6 +9,8 @@
 4. 第三方社交账号登录功能中添加使用企业微信登录的支持，[配置说明](.github/doc/企业微信登录配置说明.md)；
 5. 对workspace中不支持zh.csv文件汉化的位置，如Your Shortcuts、Report&Master等进行汉化；人工翻译优化官方的机器翻译；
 6. 添加对表单上方按钮的配置能力（通过doctype: button permission控制）；
+7. 已打通百度推广、抖音推广、快递公司、企查查等功能
+8. UI美化
 
 
 #### 版本兼容性
