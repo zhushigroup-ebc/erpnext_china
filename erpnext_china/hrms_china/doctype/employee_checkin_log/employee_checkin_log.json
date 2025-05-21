@@ -10,6 +10,7 @@
   "checkin_time",
   "schedule_checkin_time",
   "group_id",
+  "group_name",
   "schedule_id",
   "timeline_id",
   "log_type",
@@ -21,7 +22,10 @@
   "longitude",
   "latitude",
   "image",
-  "explanation"
+  "explanation",
+  "section_break_gdgt",
+  "raw",
+  "result"
  ],
  "fields": [
   {
@@ -127,12 +131,32 @@
    "fieldname": "timeline_id",
    "fieldtype": "Data",
    "label": "Timeline ID"
+  },
+  {
+   "fieldname": "raw",
+   "fieldtype": "JSON",
+   "label": "Raw"
+  },
+  {
+   "fieldname": "section_break_gdgt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "result",
+   "fieldtype": "JSON",
+   "label": "Result"
+  },
+  {
+   "fieldname": "group_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Group Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-17 09:09:22.581171",
+ "modified": "2025-05-21 15:46:09.229329",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "Employee Checkin Log",
