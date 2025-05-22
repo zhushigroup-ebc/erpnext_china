@@ -137,11 +137,10 @@ def get_exists_count(users, start_time, end_time):
 @frappe.whitelist(allow_guest=True)
 def task_get_check_in_data(start_time=None, end_time=None):
 	# [{user, employee, wecom}]
-	# all_users = get_all_active_users()
-	all_users = get_temp_users()
+	all_users = get_all_active_users()
+	# all_users = get_temp_users()
 	setting = frappe.get_doc("WeCom Setting")
 	access_token = setting.access_token
-	access_token = "hTJZxvHRiMTpIA6nfvRUjsjiKFucC09SmglDT57APkGCoSRcZJjQ3Z0EFuuzfFk6wBf5t1afS7wq0ujioMvkGme2lNV68V8wuSA1FtjTnz5rmBZQ3oe0RS-Mo6KcZi50inQ9JZ2yTM0X48GQBjo_QJIT366Jy-1t8ca5zeg-Zr3i2oqnWNIt0p1VzsXX29Lh3RPKHQk2zk3ycZs7Vasdbw"
 	if not access_token:
 		return
 	
@@ -186,11 +185,10 @@ def disable_user(name):
 
 @frappe.whitelist(allow_guest=True)
 def task_get_checkin_day_data(first_day=None, last_day=None):
-	# all_users = get_all_active_users()
-	all_users = get_temp_users()
+	all_users = get_all_active_users()
+	# all_users = get_temp_users()
 	setting = frappe.get_doc("WeCom Setting")
 	access_token = setting.access_token
-	access_token = "hTJZxvHRiMTpIA6nfvRUjsjiKFucC09SmglDT57APkGCoSRcZJjQ3Z0EFuuzfFk6wBf5t1afS7wq0ujioMvkGme2lNV68V8wuSA1FtjTnz5rmBZQ3oe0RS-Mo6KcZi50inQ9JZ2yTM0X48GQBjo_QJIT366Jy-1t8ca5zeg-Zr3i2oqnWNIt0p1VzsXX29Lh3RPKHQk2zk3ycZs7Vasdbw"
 	
 	if not access_token:
 		return
