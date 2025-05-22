@@ -184,7 +184,7 @@ class CustomSalesOrder(SalesOrder):
     def set_address_name(self):
         # 找到原始的订单的地址信息，设置到发货单上
         if self.custom_original_sales_order:
-            original_sales_order = frappe.get_doc("Sales Order", self.custom_original_sales_order)
+            original_sales_order = frappe.db.get_value("Sales Order", self.custom_original_sales_order, ['shipping_address_name', 'shipping_address'], as_dict=1)
             if original_sales_order:
                 shipping_address_name = original_sales_order.shipping_address_name
                 shipping_address = original_sales_order.shipping_address
