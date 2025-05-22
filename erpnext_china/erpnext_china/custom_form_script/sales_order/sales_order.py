@@ -179,6 +179,19 @@ class CustomSalesOrder(SalesOrder):
         self.set_state_and_city()
         self.set_discount_amount_custom_after_distinct__amount_request()
         self.check_customer_and_internal_supplier()
+        self.set_address_name()
+
+    def set_address_name(self):
+        # 找到原始的订单的地址信息，设置到发货单上
+        if self.custom_original_sales_order:
+            original_sales_order = frappe.get_doc("Sales Order", self.custom_original_sales_order)
+            if original_sales_order:
+                shipping_address_name = original_sales_order.shipping_address_name
+                shipping_address = original_sales_order.shipping_address
+                if self.shipping_address_name != shipping_address_name or self.shipping_address != shipping_address:
+                    self.shipping_address_name = shipping_address_name
+                    self.shipping_address = shipping_address
+    
     def after_save(self):
         self.set_discount_amount_custom_after_distinct__amount_request()
 
