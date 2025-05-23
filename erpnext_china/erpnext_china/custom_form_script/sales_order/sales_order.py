@@ -191,7 +191,7 @@ class CustomSalesOrder(SalesOrder):
                 if self.shipping_address_name != shipping_address_name or self.shipping_address != shipping_address:
                     self.shipping_address_name = shipping_address_name
                     self.shipping_address = shipping_address
-    
+
     def after_save(self):
         self.set_discount_amount_custom_after_distinct__amount_request()
 
