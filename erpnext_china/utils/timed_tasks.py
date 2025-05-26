@@ -146,7 +146,8 @@ def task_get_check_in_data(start_time=None, end_time=None):
 	
 	if not start_time or not end_time:
 		start_time, end_time = get_today_timestamp()
-	
+	start_time = int(start_time)
+	end_time = int(end_time)
 	# [[0-100],[100-200],[200-267]]
 	user_slices = get_user_slices(all_users)
 	for users in user_slices:
