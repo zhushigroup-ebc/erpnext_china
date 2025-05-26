@@ -24,6 +24,7 @@ def add_employee_checkin_log(check_in_data, code, employee):
 		"timeline_id": check_in_data.get('timeline_id', ''),
 		"group_name": check_in_data.get('groupname', ''),
 		"exception_type": exception_type,
+		"checkin_type": check_in_data.get('checkin_type', ''),
 		"raw": check_in_data
 	}
 	sch_checkin_time = check_in_data.get('sch_checkin_time')
