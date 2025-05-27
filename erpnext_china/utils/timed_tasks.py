@@ -18,6 +18,7 @@ def add_employee_checkin_log(check_in_data, code, employee):
 		"doctype": "Employee Checkin Log",
 		"employee": employee,
 		"checkin_time": checkin_time,
+		"user_id": check_in_data.get('userid', ''),
 		"code": code,
 		"group_id": check_in_data.get('groupid', ''),
 		"schedule_id": check_in_data.get('schedule_id', ''),
