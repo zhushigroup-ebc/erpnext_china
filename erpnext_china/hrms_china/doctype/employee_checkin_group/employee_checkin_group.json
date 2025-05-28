@@ -7,7 +7,8 @@
  "field_order": [
   "group_name",
   "group_id",
-  "code"
+  "code",
+  "calculate_money_code"
  ],
  "fields": [
   {
@@ -26,12 +27,17 @@
    "fieldname": "code",
    "fieldtype": "Code",
    "label": "Code"
+  },
+  {
+   "fieldname": "calculate_money_code",
+   "fieldtype": "Code",
+   "label": "Calculate Money Code"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-17 15:35:33.663346",
+ "modified": "2025-05-28 08:36:21.792894",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "Employee Checkin Group",
