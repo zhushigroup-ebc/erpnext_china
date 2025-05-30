@@ -51,7 +51,6 @@ class CustomSalesOrder(SalesOrder):
                 address_doc.save(ignore_permissions=True)
 
     def before_validate(self, method=None):
-        self.set_address_link_internal_customer()
         items = [d.item_code for d in self.items]
         # 只从数据库读取一次
         default_warehouse_list = frappe.get_all('Item Default', 
@@ -94,6 +93,8 @@ class CustomSalesOrder(SalesOrder):
             self.clear_drop_ship()
             self.get_final_customer()
 
+            self.set_address_name()
+            self.set_address_link_internal_customer()
     def set_employee_and_department(self):
         if self.is_new():
             employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user}, ["name", "first_name", "department"], as_dict=1)
@@ -179,7 +180,6 @@ class CustomSalesOrder(SalesOrder):
         self.set_state_and_city()
         self.set_discount_amount_custom_after_distinct__amount_request()
         self.check_customer_and_internal_supplier()
-        self.set_address_name()
 
     def set_address_name(self):
         # 找到原始的订单的地址信息，设置到发货单上
