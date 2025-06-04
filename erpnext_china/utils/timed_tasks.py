@@ -8,14 +8,13 @@ import frappe
 
 from .wechat import api
 
-def add_employee_checkin_log(check_in_data, code, employee):
+def add_or_update_emp_checkin_log(hash_code, check_in_data, code, employee, update=False, doc_name=None):
 	"""
 	写入考勤记录
 	"""
 	checkin_time = datetime.fromtimestamp(check_in_data.get('checkin_time'))
 	exception_type = check_in_data.get('exception_type')
 	doc_data = {
-		"doctype": "Employee Checkin Log",
 		"employee": employee,
 		"checkin_time": checkin_time,
 		"user_id": check_in_data.get('userid', ''),
@@ -26,7 +25,8 @@ def add_employee_checkin_log(check_in_data, code, employee):
 		"group_name": check_in_data.get('groupname', ''),
 		"exception_type": exception_type,
 		"checkin_type": check_in_data.get('checkin_type', ''),
-		"raw": check_in_data
+		"raw": check_in_data,
+		"hash_code": hash_code
 	}
 	sch_checkin_time = check_in_data.get('sch_checkin_time')
 	if sch_checkin_time:
@@ -46,7 +46,13 @@ def add_employee_checkin_log(check_in_data, code, employee):
 			"latitude": check_in_data.get('lat'),
 			"log_type": '外勤-手机定位',
 		})
-	doc = frappe.get_doc(doc_data).insert(ignore_permissions=True)
+	if update:
+		doc = frappe.get_doc("Employee Checkin Log", doc_name)
+		doc.update(doc_data)
+		doc.save(ignore_permissions=True)
+	else:
+		doc_data.update({"doctype": "Employee Checkin Log"})
+		doc = frappe.get_doc(doc_data).insert(ignore_permissions=True)
 	frappe.db.commit()
 
 
@@ -68,15 +74,7 @@ def get_temp_users():
 	没有梳理好Employee和User中的数据时，暂时用
 	"""
 	users_id = [
-		"lilingyu@zhushigroup.cn",
-		"yinzhenjiang@zhushigroup.cn",
-		"wangmiao@zhushigroup.cn",
-		"lixiulu@zhushigroup.cn",
-		"houjun@zhushigroup.cn",
 		"liuyangguang@zhushigroup.cn",
-		"liziyuan@zhushigroup.cn",
-		"yangzhen@zhushigroup.cn",
-		"liuchao@zhushigroup.cn"
 	]
 	users = []
 	for uid in users_id:
@@ -125,19 +123,13 @@ def timestamp_to_str(dt:int, fmt: str=r"%Y-%m-%d %H:%M:%S"):
 	return datetime.fromtimestamp(dt).strftime(fmt)
 
 
-def get_exists_count(users, start_time, end_time):
-	count = frappe.db.count("Employee Checkin Log", filters=[
-		["checkin_time", "between", [
-			timestamp_to_str(start_time), 
-			timestamp_to_str(end_time)
-		]],
-		["employee", 'in', [user.get('employee') for user in users]]
-	])
-	return count or 0
+def get_exists_values(unique_code_list):
+	return frappe.get_all(
+		"Employee Checkin Log", 
+		filters={"code": ['in', unique_code_list]}, 
+		fields=["name", "hash_code", "code"])
 
-
-@frappe.whitelist(allow_guest=True)
-def task_get_check_in_data(start_time=None, end_time=None):
+def get_checkin_data(start_time=None, end_time=None):
 	# [{user, employee, wecom}]
 	all_users = get_all_active_users()
 	# all_users = get_temp_users()
@@ -148,7 +140,7 @@ def task_get_check_in_data(start_time=None, end_time=None):
 	
 	if not start_time or not end_time:
 		start_time, end_time = get_today_timestamp()
-		start_time = start_time - 60*60 # 为了覆盖定时的这个时间差的记录，往前推一个小时
+		start_time = start_time - 24*60*60 # 为了获取企微校正后的打卡记录，每次同步时，同时同步前一天的打卡记录
 		
 	start_time = int(start_time)
 	end_time = int(end_time)
@@ -156,26 +148,47 @@ def task_get_check_in_data(start_time=None, end_time=None):
 	user_slices = get_user_slices(all_users)
 	for users in user_slices:
 		results = api.get_check_in_data(access_token, [user.get("wecom") for user in users], start_time, end_time)
-		local_exists_count = get_exists_count(users, start_time, end_time)
 		
-		# 当日已存在的记录个数和新拉取的数据个数一致说明无变化
-		# 避免没有新数据增量出现也会执行has_exists去重操作
-		# 过了四个打卡高峰期后，一般不会有新增量出现
-		if local_exists_count >= len(results):
-			continue
-		
-		trans_users = trans_user_dict(users)
+		unique_code_hash_code_dict = {}
+		unique_code_raw_dict = {}
+		unique_code_list = []
 		for result in results:
-			# 这里的userid其实是我们User的custom_wecom_uid
-			userid = result.get('userid')
-			code = '.'.join([userid, str(result.get('checkin_time'))])
+			hash_code = hashlib.md5(json.dumps(result).encode()).hexdigest()
+			unique_code = '.'.join([str(result.get('userid')), str(result.get('checkin_time'))])
 
-			# 每条数据根据 code 判重，code为索引字段
-			if has_exists(code):
-				continue
+			unique_code_hash_code_dict[unique_code] = hash_code
+			unique_code_raw_dict[unique_code] = result
+			unique_code_list.append(unique_code)
 
+		local_exists = get_exists_values(unique_code_list)
+		local_codes = [local.code for local in local_exists]
+
+		trans_users = trans_user_dict(users)
+		
+		# 新增的数据
+		add_data = set(unique_code_list) - set(local_codes)
+		for ucode in add_data:
+			raw = unique_code_raw_dict[ucode]
+			userid = raw.get('userid')
 			employee = trans_users.get(userid).get('employee')
-			add_employee_checkin_log(result, code, employee)
+			add_or_update_emp_checkin_log(unique_code_hash_code_dict[ucode], raw, ucode, employee)
+		
+		# 更新数据
+		for e in local_exists:
+			local_hash_code = e.hash_code
+			local_uique_code = e.code
+			current_hash_code = unique_code_hash_code_dict.get(local_uique_code)
+			if current_hash_code and local_hash_code != current_hash_code:
+				raw =  unique_code_raw_dict.get(local_uique_code)
+				userid = raw.get('userid')
+				employee = trans_users.get(userid).get('employee')
+				add_or_update_emp_checkin_log(current_hash_code, raw, local_uique_code, employee, update=True, doc_name=e.name)
+
+
+@frappe.whitelist(allow_guest=True)
+def task_get_check_in_data(start_time=None, end_time=None):
+	frappe.enqueue(method=get_checkin_data, queue="long", timeout=3600, job_name="get_checkin_data", 
+		start_time=start_time, end_time=end_time)
 
 
 def disable_user(name):
@@ -188,8 +201,8 @@ def disable_user(name):
 	except:  # 有的可能因为信息不全在保存时报错
 		pass
 
-@frappe.whitelist(allow_guest=True)
-def task_get_checkin_day_data(first_day=None, last_day=None):
+
+def get_checkin_day_data(first_day=None, last_day=None):
 	all_users = get_all_active_users()
 	# all_users = get_temp_users()
 	setting = frappe.get_doc("WeCom Setting")
@@ -230,6 +243,12 @@ def task_get_checkin_day_data(first_day=None, last_day=None):
 				continue
 			
 			add_employee_checkin_day_data(result, base_info, rule_info, user_id_employee_id, wecom_uid_user_id, new_unique_id)
+
+
+@frappe.whitelist(allow_guest=True)
+def task_get_checkin_day_data(first_day=None, last_day=None):
+	frappe.enqueue(method=get_checkin_day_data, queue="long", timeout=3600, job_name="get_checkin_day_data", 
+		first_day=first_day, last_day=last_day)
 
 
 def get_current_month_first_last_day():

@@ -17,6 +17,7 @@
   "log_type",
   "exception_type",
   "code",
+  "hash_code",
   "column_break_fmyu",
   "location_or_device_id",
   "address",
@@ -106,6 +107,7 @@
    "fieldtype": "Data",
    "label": "Unique Code",
    "read_only": 1,
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -167,12 +169,20 @@
    "fieldname": "user_id",
    "fieldtype": "Data",
    "label": "User ID"
+  },
+  {
+   "fieldname": "hash_code",
+   "fieldtype": "Data",
+   "label": "Hash Code",
+   "read_only": 1,
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-27 16:36:55.775714",
+ "modified": "2025-06-03 11:03:26.046772",
  "modified_by": "Administrator",
  "module": "hrms_china",
  "name": "Employee Checkin Log",
