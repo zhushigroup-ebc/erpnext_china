@@ -187,10 +187,11 @@ def get_employee_tree(parent,
             if pluck == 'userid':
                 users.append(user)
             elif pluck == 'employee':
-                emp_json = json.loads(frappe.cache.get(f'hrms_employee_children'))
-                df = pd.DataFrame(emp_json)
-                emp = df.name[df.user_id==user].iloc[0]
-                users.append(emp)
+                emp = frappe.db.get_list('Employee',filters={'user_id':'zhengdongmei@zhushigroup.cn'},fields='name',as_list=True)
+                try:
+                    users.append(emp[0][0])
+                except:
+                    pass
             else:
                 pass
     except:
