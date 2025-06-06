@@ -187,7 +187,7 @@ def get_employee_tree(parent,
         pass
     if has_parent:
         if pluck == 'userid':
-            users.append(user)
+            users.append(parent)
         elif pluck == 'employee':
             emp = frappe.db.get_list('Employee',filters={'user_id':parent},fields='name',as_list=True)
             try:
