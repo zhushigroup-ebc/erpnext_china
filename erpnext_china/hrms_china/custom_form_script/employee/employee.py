@@ -183,17 +183,17 @@ def get_employee_tree(parent,
 
     try:
         users = json.loads(frappe.cache.get(f'{ cache_path[pluck] }_{ parent }'))
-        if has_parent:
-            if pluck == 'userid':
-                users.append(user)
-            elif pluck == 'employee':
-                emp = frappe.db.get_list('Employee',filters={'user_id':'zhengdongmei@zhushigroup.cn'},fields='name',as_list=True)
-                try:
-                    users.append(emp[0][0])
-                except:
-                    pass
-            else:
-                pass
     except:
         pass
+    if has_parent:
+        if pluck == 'userid':
+            users.append(user)
+        elif pluck == 'employee':
+            emp = frappe.db.get_list('Employee',filters={'user_id':parent},fields='name',as_list=True)
+            try:
+                users.append(emp[0][0])
+            except:
+                pass
+        else:
+            pass
     return users
