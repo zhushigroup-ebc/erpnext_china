@@ -197,8 +197,46 @@ function expand_notes_html(frm, wrapper) {
     return wrapper
 }
 
-function addTohours(d, h, f = 'YYYY-MM-DD HH:mm:ss') {
-    return moment(d).add(h, 'hours').format(f)
+// function addTohours(d, h, f = 'YYYY-MM-DD HH:mm:ss') {
+//     return moment(d).add(h, 'hours').format(f)
+// }
+
+// 排除每天 22:00 - 06:00
+function addTohours(baseTime, hoursToAdd) {
+    const workStartHour = 6;
+    const workEndHour = 22;
+
+    let current = moment(baseTime);
+    let remainingMinutes = hoursToAdd * 60;
+
+    while (remainingMinutes > 0) {
+        let hour = current.hour();
+
+        // 如果当前是非工作时间（22:00 - 6:00），则跳转到下一个工作日的早上 6:00
+        if (hour >= 22 || hour < 6) {
+            current.add(1, 'day')
+                   .startOf('day')
+                   .add(workStartHour, 'hour');
+            continue;
+        }
+
+        // 当前时间在工作时间内
+        const endOfWorkToday = moment(current).startOf('day').add(workEndHour, 'hour');
+        const availableMinutesToday = Math.max(0, endOfWorkToday.diff(current, 'minutes'));
+
+        const useMinutes = Math.min(availableMinutesToday, remainingMinutes);
+        current.add(useMinutes, 'minutes');
+        remainingMinutes -= useMinutes;
+
+        // 如果还有剩余时间，跳到下一个工作日早上 6:00
+        if (remainingMinutes > 0) {
+            current.add(1, 'day')
+                   .startOf('day')
+                   .add(workStartHour, 'hour'); // 从 6:00 整点开始
+        }
+    }
+
+    return current.format("YYYY-MM-DD HH:mm:ss");
 }
 
 function getBgClass(targetDate, startDate, endDate) {
