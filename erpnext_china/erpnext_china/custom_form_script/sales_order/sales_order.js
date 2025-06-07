@@ -19,18 +19,21 @@ frappe.ui.form.on('Sales Order', {
     refresh(frm){
         
         // 设置子表字段的筛选条件
-        frm.set_query("item_code", "items", function(doc) {
-            return {
-                filters: [
-                    ["Item", "disabled", "=", 0], // 只显示启用的项目
-                    ["Item", "has_variants", "=", 0], // 不显示变体项目
-                    ["Item", "is_sales_item", "=", 1], // 只显示销售项目
-                    ["Item", "item_group", "descendants of (inclusive)", "成品"] // 只显示成品组的项目
-                    // ["Item", "company", "in", [doc.company]] // 匹配主表的公司字段
-                ]
-            };
-        });
-        
+        // sales_common.js中会覆盖item_code 的查询条件，但是客户端脚本是在最后加载，因此写到客户端脚本中
+		// frm.set_query("item_code", "items", ()=>{
+        //     return {
+        //         query: "erpnext.controllers.queries.item_query",
+        //         filters: [
+        //             ["Item", "disabled", "=", 0], // 只显示启用的项目
+        //             ["Item", "has_variants", "=", 0], // 不显示变体项目
+        //             ["Item", "is_sales_item", "=", 1], // 只显示销售项目
+        //             ["Item", "item_group", "descendants of (inclusive)", "成品"], // 只显示成品组的项目
+        //             // ["Item", "company", "in", [doc.company]] // 匹配主表的公司字段
+        //             ["Item", "custom_is_oem_or_odm", "=", frm.doc.custom_order_type_for_product == "定制" ? 1 : 0], // 是否定制
+        //         ]
+        //     };
+        // })
+
         frm.set_query("coupon_code", function(doc) {
             return {
                 query:"erpnext_china_mdm.mdm.custom_form_script.sales_order.sales_order.query_coupon_code",

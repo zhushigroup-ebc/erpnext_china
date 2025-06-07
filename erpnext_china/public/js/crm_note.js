@@ -134,51 +134,52 @@ function expand_notes_html(frm, wrapper) {
     wrapper.find(".revisit-create-date").first().text("创建时间：" + creationDatetime);
 
     let revisitTimeBoxHtml = '';
+    // 定义5个时间点需要加的小时数
+    let hoursList = [6, 12, 18, 24, 48];
+    // 计算5个时间点
+    let timePoints = [creationDatetime]; // 第一个是创建时间
+    for (let i = 0; i < 5; i++) {
+        timePoints.push(addTohours(creationDatetime, hoursList[i]));
+    }
+
     for (let i = 1; i <= 5; i++) {
-        let times = '首次回访'
-        let lastElementClass = ''
-        let numBgClass = ''
-        let preDatetime = creationDatetime;
-        let expectedDatetime = creationDatetime;
+        let times = '';
+        let lastElementClass = '';
         switch (i) {
             case 1:
-                preDatetime = creationDatetime;
-                expectedDatetime = addTohours(creationDatetime, 6)
+                times = "首次回访";
                 break;
             case 2:
-                preDatetime = addTohours(creationDatetime, 6);
-                expectedDatetime = addTohours(creationDatetime, 12);
-                times = "第二次回访"
+                times = "第二次回访";
                 break;
             case 3:
-                preDatetime = addTohours(creationDatetime, 12);
-                expectedDatetime = addTohours(creationDatetime, 18);
-                times = "第三次回访"
+                times = "第三次回访";
                 break;
             case 4:
-                preDatetime = addTohours(creationDatetime, 18);
-                expectedDatetime = addTohours(creationDatetime, 24);
-                times = "第四次回访"
+                times = "第四次回访";
                 break;
             case 5:
-                preDatetime = addTohours(creationDatetime, 24);
-                expectedDatetime = addTohours(creationDatetime, 48);
-                times = "第五次回访"
-                lastElementClass = 'last'
+                times = "第五次回访";
+                lastElementClass = 'last';
                 break;
         }
+        
+        let numBgClass = '';
+        let preDatetime = timePoints[i-1]; // 上一个时间点
+        let expectedDatetime = timePoints[i]; // 当前时间点
+
         for(const note of frm.doc.notes) {
             if('销售反馈' == note.custom_note_type) {
                 const code = getBgClass(note.added_on, preDatetime, expectedDatetime);
                 if(code == 1) {
                     numBgClass = "success-bg-color";
-                    break
+                    break;
                 }
                 if(code == 0) {
-                    numBgClass = ''
-                    break
+                    numBgClass = '';
+                    break;
                 }
-                numBgClass = 'expired-bg-color'
+                numBgClass = 'expired-bg-color';
             }
         }
         
@@ -190,15 +191,48 @@ function expand_notes_html(frm, wrapper) {
                     <div class="times">${times}</div>
                     <p class="time-description">请在${expectedDatetime}前完成</p>
                 </div>
-            </div>`
-        revisitTimeBoxHtml = revisitTimeBoxHtml + timeBoxItem
+            </div>`;
+        revisitTimeBoxHtml += timeBoxItem;
     }
-    $(revisitTimeBoxHtml).appendTo(wrapper.find(".revisit-time-box").first())
-    return wrapper
+    $(revisitTimeBoxHtml).appendTo(wrapper.find(".revisit-time-box").first());
+    return wrapper;
 }
 
-function addTohours(d, h, f = 'YYYY-MM-DD HH:mm:ss') {
-    return moment(d).add(h, 'hours').format(f)
+function addTohours(baseTime, hoursToAdd) {
+
+    let current = moment(baseTime);
+    let remainingSeconds = hoursToAdd * 3600; // 转换为秒
+
+    while (remainingSeconds > 0) {
+        // 获取当前时间点
+        const currentTime = moment(current);
+        
+        // 如果当前在非工作时间 (22:00-06:00)
+        if (currentTime.hour() >= 22 || currentTime.hour() < 6) {
+            // 跳到下一个工作日的06:00
+            const nextDay = moment(currentTime).add(1, 'days').set({hour: 6, minute: 0, second: 0});
+            current = nextDay;
+            continue;
+        }
+        
+        // 计算当天工作结束时间 (22:00)
+        const endOfWorkToday = moment(currentTime).set({hour: 22, minute: 0, second: 0});
+        
+        // 计算当天剩余工作时间（秒）
+        const availableSecondsToday = endOfWorkToday.diff(currentTime, 'seconds');
+        
+        if (availableSecondsToday > 0) {
+            // 使用当天可用的时间
+            const secondsToUse = Math.min(availableSecondsToday, remainingSeconds);
+            current.add(secondsToUse, 'seconds');
+            remainingSeconds -= secondsToUse;
+        } else {
+            // 当天无可用时间，跳到下一天
+            current.add(1, 'days').set({hour: 6, minute: 0, second: 0});
+        }
+    }
+
+    return current.format("YYYY-MM-DD HH:mm:ss");
 }
 
 function getBgClass(targetDate, startDate, endDate) {
@@ -206,16 +240,13 @@ function getBgClass(targetDate, startDate, endDate) {
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // 如果反馈时间落入区间内，则success
     if (target >= start && target <= end) {
-        return 1
+        return 1;
     }
 
-    // 如果当前时间还没到此区间的结束时间
     if (new Date() <= end) {
-        return 0
+        return 0;
     }
     
-    // 其它情况都属于过期
-    return -1
+    return -1;
 }
