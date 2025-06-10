@@ -23,9 +23,10 @@ def lead_before_save_handle(doc):
 						"product_category": doc.custom_product_category,
 						"employee": lead_owner_employee
 					})
-					if item_name:
+					if item_name and '网络推广' in frappe.get_roles(frappe.session.user):
 						item_doc = frappe.get_doc("Auto Allocation Config Item", item_name)
 						item_doc.zero_datetime = frappe.utils.now_datetime()
+						item_doc.allocated_count = item_doc.allocated_count + 1
 						item_doc.save(ignore_permissions=True)
 					to_private(doc)
 		else:
