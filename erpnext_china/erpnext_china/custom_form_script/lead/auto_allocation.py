@@ -211,14 +211,32 @@ def lead_to_owner_or_public(doc):
 		frappe.msgprint("当前线索创建员工客保数量已到限制，自动进入公海！")
 		to_public(doc)
 
-def to_public(doc):
+def to_public(doc, content=None):
 	"""
 	线索进公海
 	"""
-	doc.custom_sea = "公海"
-	doc.custom_auto_allocation = False
-	doc.custom_lead_owner_employee = ''
-	doc.lead_owner = ''
+	if content:
+			# 如果 note 包含“放弃到部门公海原因”，则将线索进部门公海
+		if "放弃到部门公海原因" in content:
+			doc.custom_sea = "部门公海"
+			emp = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+			doc.custom_department_sea = frappe.db.get_value("Employee", emp, "reports_to")
+			doc.custom_auto_allocation = False
+			doc.custom_lead_owner_employee = ''
+			doc.lead_owner = ''
+		if "放弃到集团公海原因" in content:
+			doc.custom_department_sea = ''
+			doc.custom_sea = "公海"
+			doc.custom_auto_allocation = False
+			doc.custom_lead_owner_employee = ''
+			doc.lead_owner = ''
+	else:
+		if doc.custom_sea == "部门公海":
+			return
+		doc.custom_sea = "公海"
+		doc.custom_auto_allocation = False
+		doc.custom_lead_owner_employee = ''
+		doc.lead_owner = ''
 
 def to_private(doc):
 	"""
