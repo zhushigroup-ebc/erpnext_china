@@ -75,7 +75,7 @@ frappe.ui.form.on('Lead', {
                 frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name").then(r => {
                     const emp_name = r.message && r.message.name;
                     if (frm.doc.custom_department_sea == emp_name) {
-                        add_give_up_button(frm);
+                        add_give_up_button(frm, true);
                     }
                 });
             }
@@ -138,8 +138,9 @@ frappe.ui.form.on('Lead', {
     }
 })
 
-function add_give_up_button(frm) {
-    frm.add_custom_button(__("放弃线索"), () => {
+function add_give_up_button(frm, to_public_sea=false) {
+    let button_text = to_public_sea ? "集团公海" : "部门公海";
+    frm.add_custom_button("放弃到" + button_text, () => {
         let d = new frappe.ui.Dialog({
             title: '请填写放弃原因',
             fields: [
