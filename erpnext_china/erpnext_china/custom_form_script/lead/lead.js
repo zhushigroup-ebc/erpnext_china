@@ -55,51 +55,7 @@ frappe.ui.form.on('Lead', {
 
             // 如果当前用户是线索负责人并且当前线索没有创建客户可以放弃线索
             if (frappe.session.user == frm.doc.lead_owner && !frm.doc.__onload.is_customer) {
-                frm.add_custom_button(__("放弃线索"), () => {
-                    let d = new frappe.ui.Dialog({
-                        title: '请填写放弃原因',
-                        fields: [
-                            {
-                                label: '反馈内容',
-                                fieldname: 'content',
-                                fieldtype: 'Text',
-                                reqd: '1'
-                            }
-                        ],
-                        size: 'small',
-                        primary_action_label: '确定',
-                        primary_action(values) {
-                            let content = values['content'];
-                            content = content.trim()
-                            if (content.length < 3) {
-                                frappe.throw("内容必须大于3个字！")
-                            }
-                            const firstChar = content[0];
-                            let isDieci = true;
-                            for (let i = 1; i < content.length; i++) {
-                                if (content[i] !== firstChar) {
-                                    isDieci = false
-                                    break
-                                }
-                            }
-                            if (isDieci) {
-                                frappe.throw("内容格式错误！")
-                            }
-                            frappe.call("erpnext_china.erpnext_china.custom_form_script.lead.lead.give_up_lead", {
-                                lead: frm.doc.name,
-                                content: "放弃到集团公海原因：" + content
-                            }).then((r) => {
-                                if (r && r.message == 200) {
-                                    window.location.reload();
-                                }
-                            })
-                            d.hide();
-                        }
-                    });
-
-                    d.show();
-
-                }, __("Action"));
+                add_give_up_button(frm);
             } else {
                 if (frm.doc.lead_owner == "" || frm.doc.custom_sea == "公海") {
                     frm.add_custom_button(__("认领线索"), () => {
@@ -112,6 +68,16 @@ frappe.ui.form.on('Lead', {
 
                     }, __("Action"));
                 }
+            }
+
+            if (frm.doc.custom_sea == "部门公海") {
+                // 异步判断当前用户是否为部门公海负责人
+                frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name").then(r => {
+                    const emp_name = r.message && r.message.name;
+                    if (frm.doc.custom_department_sea == emp_name) {
+                        add_give_up_button(frm, true);
+                    }
+                });
             }
 
             // 展示是否已经查看过
@@ -171,3 +137,55 @@ frappe.ui.form.on('Lead', {
         })
     }
 })
+
+function add_give_up_button(frm, to_public_sea=false) {
+    let button_text = to_public_sea ? "集团公海" : "部门公海";
+    frm.add_custom_button("放弃到" + button_text, () => {
+        let d = new frappe.ui.Dialog({
+            title: '请填写放弃原因',
+            fields: [
+                {
+                    label: '反馈内容',
+                    fieldname: 'content',
+                    fieldtype: 'Text',
+                    reqd: '1'
+                }
+            ],
+            size: 'small',
+            primary_action_label: '确定',
+            primary_action(values) {
+                let content = values['content'];
+                content = content.trim()
+                if (content.length < 3) {
+                    frappe.throw("内容必须大于3个字！")
+                }
+                const firstChar = content[0];
+                let isDieci = true;
+                for (let i = 1; i < content.length; i++) {
+                    if (content[i] !== firstChar) {
+                        isDieci = false
+                        break
+                    }
+                }
+                if (isDieci) {
+                    frappe.throw("内容格式错误！")
+                }
+                let prefix = "放弃到集团公海原因：";
+                if (frm.doc.custom_sea == "私海") {
+                    prefix = "放弃到部门公海原因：";
+                }
+                frappe.call("erpnext_china.erpnext_china.custom_form_script.lead.lead.give_up_lead", {
+                    lead: frm.doc.name,
+                    content: prefix + content
+                }).then((r) => {
+                    if (r && r.message == 200) {
+                        window.location.reload();
+                    }
+                })
+                d.hide();
+            }
+        });
+
+        d.show();
+    }, __("Action"));
+}

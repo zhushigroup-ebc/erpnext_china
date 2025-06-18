@@ -204,6 +204,10 @@ class CustomLead(Lead):
 		if self.is_new() and self.source in ["业务自录入","已合作客户补录"]:
 			self.status = "Lead"
 
+		# 线索负责员工有值时，清空部门公海
+		if self.custom_lead_owner_employee:
+			self.custom_department_sea = ''
+
 		def sse_client(content):
 			def get_token():
 				# 为了保护密钥安全，建议将密钥设置在环境变量中或者配置文件中，请参考本文凭证管理章节。
@@ -337,7 +341,6 @@ def give_up_lead(**kwargs):
 	content = kwargs.get('content')
 	if lead_name:
 		lead = frappe.get_doc('Lead', lead_name)
-		auto_allocation.to_public(lead)
 
 		if content:
 			lead.append("notes", {
@@ -346,6 +349,8 @@ def give_up_lead(**kwargs):
 				"added_by": frappe.session.user,
 				"added_on": frappe.utils.get_datetime()
 			})
+
+		auto_allocation.to_public(lead, content)
 
 		lead.save(ignore_permissions=True)
 		return 200
