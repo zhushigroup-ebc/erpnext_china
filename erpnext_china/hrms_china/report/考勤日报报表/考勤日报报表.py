@@ -17,22 +17,19 @@ def execute(filters=None):
 def get_data(filters: dict):
 	sql = get_conditions(filters)
 	rows = frappe.db.sql(sql, as_dict=True)
-	rows.sort(key=itemgetter('date', 'department', 'employee', 'result'))
+	keys = ['date', 'department', 'employee', 'result', 'sp_type', 'sp_duration', 'sp_time_type']
+	rows.sort(key=itemgetter(*keys))
 	final_result = []
-	for (date, department, employee, result), items in groupby(rows, key=itemgetter('date', 'department', 'employee', 'result')):
-		row_header_data = {
-			'date': date,
-			'department': department,
-			'employee': employee,
-			'result': result,
-		}
+
+	# (date, department, employee, result, sp_type, sp_duration, sp_time_type)
+	for row_key_values, items in groupby(rows, key=itemgetter(*keys)):
+		row_header_data = dict(zip(keys, row_key_values))
 		final_result.append(row_header_data)
 		for item in items:
-			item['date'] = None
-			item['department'] = None
-			item['employee'] = None
-			item['result'] = None
-			final_result.append(item)
+			cleaned_item = {
+                k: (None if k in keys else v) for k, v in item.items()
+            }
+			final_result.append(cleaned_item)
 
 	return final_result
 
@@ -58,6 +55,9 @@ def get_conditions(filters):
 			ecdd.employee_name as employee, 
 			ecdd.department,
 			ecdd.result, 
+			ecdd.sp_type,
+			ecdd.sp_duration,
+			ecdd.sp_time_type,
 			ecl.checkin_time, 
 			ecl.checkin_type, 
 			ecl.result as checkin_result,
@@ -93,6 +93,21 @@ def get_columns(filters):
 			"fieldname": "result",
 			"fieldtype": "Data",
 			"width": 200,
+		},
+		{
+			'label': _("SP Type"),
+			'fieldname': 'sp_type',
+			'fieldtype': 'Data',
+		},
+		{
+			'label': _("SP Duration"),
+			'fieldname': 'sp_duration',
+			'fieldtype': 'Data',
+		},
+		{
+			'label': _("SP Time Type"),
+			'fieldname': 'sp_time_type',
+			'fieldtype': 'Data',
 		},
 		{
 			"label": _("Checkin Type"),
