@@ -15,6 +15,24 @@ class EmployeeCheckinDayData(Document):
 			func = globals()['func']
 			self.result = func(self.raw)
 
+	def set_values(self):
+		if self.raw:
+			sp_items = self.raw.get('sp_items', [])
+			for item in sp_items:
+				if int(item.get('count', 0)) > 0:
+					self.sp_type = item.get("name")
+					duration = item.get("duration")
+					if item.get("time_type") == 0:
+						# 天
+						self.sp_time_type = "天"
+						self.sp_duration = int(duration) / 86400
+					else:
+						# 小时
+						self.sp_time_type = "小时"
+						self.sp_duration = int(duration) / 3600
+					break
+	
 	def before_save(self):
 		self.calculate_checkin_result()
+		self.set_values()
 
