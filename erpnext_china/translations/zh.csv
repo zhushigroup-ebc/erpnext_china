@@ -9269,3 +9269,6 @@ Sales And Collection Performance Report,销售业绩报表
 Show Product Category,显示产品类别
 Employee Checkin Day Data,考勤日报
 Employee Checkin Group,考勤规则
+SP Type,假勤
+SP Duration,假勤时长
+SP Time Type,假勤时长单位
