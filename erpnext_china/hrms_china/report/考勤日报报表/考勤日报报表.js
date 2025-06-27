@@ -45,10 +45,14 @@ frappe.query_reports["考勤日报报表"] = {
             options: "Employee",
             get_query: function() {
                 let department = frappe.query_report.get_filter_value("department")
-                return {
-                    filters: {
+                let filters = {};
+                if (department) {
+                    filters = {
                         department: ["in", [department]]
                     }
+                }
+                return {
+                    filters
                 };
             }
         },
