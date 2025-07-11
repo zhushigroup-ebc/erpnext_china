@@ -153,18 +153,7 @@ class CustomSalesOrder(SalesOrder):
                 self.custom_city = address.city
                 self.custom_check_area = self.set_check_area(address.state,address.city,box_count)
 
-    def set_discount_amount_custom_after_distinct__amount_request(self):
-        discount_amount = 0
-        # process custom_after_distinct__amount_request for internal sales order
-        if self.is_internal_customer and self.custom_original_sales_order:
-            for item in self.items:
-                poi_name = item.purchase_order_item
-                soi_name = frappe.db.get_value("Purchase Order Item", poi_name, 'sales_order_item')
-                item.custom_after_distinct__amount_request = frappe.db.get_value("Sales Order Item", soi_name, 'custom_after_distinct__amount_request')
 
-        for d in self.get("items"):
-            discount_amount = discount_amount + (d.amount - d.custom_after_distinct__amount_request)
-        self.discount_amount = discount_amount
     def check_customer_and_internal_supplier(self):
         for item in self.items:
             if item.supplier in [self.customer_name, self.customer]:
@@ -178,7 +167,6 @@ class CustomSalesOrder(SalesOrder):
         self.set_employee_and_department()
         self.set_freight()
         self.set_state_and_city()
-        self.set_discount_amount_custom_after_distinct__amount_request()
         self.check_customer_and_internal_supplier()
 
     def set_address_name(self):
@@ -192,8 +180,6 @@ class CustomSalesOrder(SalesOrder):
                     self.shipping_address_name = shipping_address_name
                     self.shipping_address = shipping_address
 
-    def after_save(self):
-        self.set_discount_amount_custom_after_distinct__amount_request()
 
     def clear_drop_ship(self):
         for d in self.get("items"):
