@@ -14,7 +14,66 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
 )
 import frappe.utils
 from erpnext.selling.doctype.sales_order.sales_order import WarehouseRequired
-from frappe.utils import cint, getdate
+from frappe.utils import cint, getdate, flt
+from erpnext.controllers.taxes_and_totals import calculate_taxes_and_totals
+
+class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
+    def apply_discount_amount(self):
+        if self.doc.discount_amount:
+            if not self.doc.apply_discount_on:
+                frappe.throw(_("Please select Apply Discount On"))
+
+            self.doc.base_discount_amount = flt(
+                self.doc.discount_amount * self.doc.conversion_rate,
+                self.doc.precision("base_discount_amount"),
+            )
+
+            if self.doc.apply_discount_on == "Grand Total" and self.doc.get("is_cash_or_non_trade_discount"):
+                self.discount_amount_applied = True
+                return
+
+            total_for_discount_amount = self.get_total_for_discount_amount()
+            net_total = 0
+            expected_net_total = 0
+
+            if total_for_discount_amount:
+                # calculate item amount after Discount Amount
+                for item in self._items:
+                    # 重写折扣金额的分配方式，因为我们已经指定了优惠后金额，无需按比例进行分配
+                    grand_total_fraction_for_current_item = self.doc.taxes[0].grand_total_fraction_for_current_item if self.doc.taxes else 1
+                    distributed_amount = flt((item.amount - item.custom_after_distinct__amount_request) / grand_total_fraction_for_current_item)
+
+                    adjusted_net_amount = item.net_amount - distributed_amount
+                    expected_net_total += adjusted_net_amount
+                    item.net_amount = flt(adjusted_net_amount, item.precision("net_amount"))
+                    item.distributed_discount_amount = flt(
+                        distributed_amount, item.precision("distributed_discount_amount")
+                    )
+                    net_total += item.net_amount
+
+                    # discount amount rounding adjustment
+                    if rounding_difference := flt(
+                        expected_net_total - net_total, self.doc.precision("net_total")
+                    ):
+                        item.net_amount = flt(
+                            item.net_amount + rounding_difference, item.precision("net_amount")
+                        )
+                        item.distributed_discount_amount = flt(
+                            distributed_amount + rounding_difference,
+                            item.precision("distributed_discount_amount"),
+                        )
+                        net_total += rounding_difference
+
+                    item.net_rate = (
+                        flt(item.net_amount / item.qty, item.precision("net_rate")) if item.qty else 0
+                    )
+
+                    self._set_in_company_currency(item, ["net_rate", "net_amount"])
+
+                self.discount_amount_applied = True
+                self._calculate()
+        else:
+            self.doc.base_discount_amount = 0
 
 class CustomSalesOrder(SalesOrder):
 
@@ -214,6 +273,19 @@ class CustomSalesOrder(SalesOrder):
         super().validate()
         self.validate_taxes_and_charges_of_company()
         self.validate_user_can_sell_item()
+
+    def calculate_taxes_and_totals(self):
+        
+        custom_calculate_taxes_and_totals(self)
+
+        if self.doctype in (
+            "Sales Order",
+            "Delivery Note",
+            "Sales Invoice",
+            "POS Invoice",
+        ):
+            self.calculate_commission()
+            self.calculate_contribution()
 
     def validate_delivery_date(self):
         if self.order_type == "Sales" and not self.skip_delivery_note:
@@ -484,17 +556,17 @@ def matching_payment_entries(docname,payment_entries):
                     'party': doc.customer,
                 })
                 pe_doc.append(
-					"references",
-					{
-						"reference_doctype": doc.doctype,
-						"reference_name": doc.name,
-						"bill_no": doc.get("bill_no"),
-						"due_date": doc.get("due_date"),
-						"total_amount": grand_total,
-						"outstanding_amount": unallocated_amount,
-						"allocated_amount": pe_doc.paid_amount,
-					},
-				)
+                    "references",
+                    {
+                        "reference_doctype": doc.doctype,
+                        "reference_name": doc.name,
+                        "bill_no": doc.get("bill_no"),
+                        "due_date": doc.get("due_date"),
+                        "total_amount": grand_total,
+                        "outstanding_amount": unallocated_amount,
+                        "allocated_amount": pe_doc.paid_amount,
+                    },
+                )
                 try:
                     pe_doc.save().submit()
                     unallocated_amount -= pe_doc.paid_amount
@@ -517,17 +589,17 @@ def matching_payment_entries(docname,payment_entries):
                     'manual_split':1
                 })
                 pe_doc.append(
-					"references",
-					{
-						"reference_doctype": doc.doctype,
-						"reference_name": doc.name,
-						"bill_no": doc.get("bill_no"),
-						"due_date": doc.get("due_date"),
-						"total_amount": grand_total,
-						"outstanding_amount": unallocated_amount,
-						"allocated_amount": unallocated_amount,
-					},
-				)
+                    "references",
+                    {
+                        "reference_doctype": doc.doctype,
+                        "reference_name": doc.name,
+                        "bill_no": doc.get("bill_no"),
+                        "due_date": doc.get("due_date"),
+                        "total_amount": grand_total,
+                        "outstanding_amount": unallocated_amount,
+                        "allocated_amount": unallocated_amount,
+                    },
+                )
                 try:
                     pe_doc.save().submit()
                     unallocated_amount -= pe_doc.paid_amount
