@@ -5,11 +5,27 @@ from frappe.share import add_docshare
 from frappe.permissions import get_role_permissions
 from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 
+from erpnext_china.erpnext_china.overrides.controllers.taxes_and_totals import custom_calculate_taxes_and_totals
+
 class CustomPurchaseOrder(PurchaseOrder):
 
 	# 取消父类中对schedule_date的验证
 	def validate_schedule_date(self):
 		pass
+
+
+	def calculate_taxes_and_totals(self):
+		
+		custom_calculate_taxes_and_totals(self)
+
+		if self.doctype in (
+			"Sales Order",
+			"Delivery Note",
+			"Sales Invoice",
+			"POS Invoice",
+		):
+			self.calculate_commission()
+			self.calculate_contribution()
 
 def make_internal_sales_order(doc, method):
 	if frappe.db.get_single_value("Selling Settings", "allow_generate_inter_company_transactions") and doc.is_internal_supplier:
@@ -24,6 +40,8 @@ def make_internal_sales_order(doc, method):
 
 		validate_delivery_date(sales_order,doc)
 		try:
+			sales_order.discount_amount = doc.discount_amount
+			sales_order.apply_discount_on = doc.apply_discount_on
 			sales_order.save().submit()
 			sales_order.db_set('owner',doc.owner)
 		except Exception as e:

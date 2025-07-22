@@ -1,8 +1,12 @@
+import json
+
 import frappe
 from frappe import _
+import frappe.utils
+from frappe.utils import cint, getdate
+
 from erpnext.selling.doctype.sales_order.sales_order import SalesOrder
 from erpnext.selling.doctype.sales_order.sales_order import make_purchase_order_for_default_supplier
-import json
 from erpnext.accounts.doctype.payment_entry.payment_entry import (
     set_party_type,
     set_party_account,
@@ -12,68 +16,10 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
     set_grand_total_and_outstanding_amount,
     set_payment_type
 )
-import frappe.utils
 from erpnext.selling.doctype.sales_order.sales_order import WarehouseRequired
-from frappe.utils import cint, getdate, flt
-from erpnext.controllers.taxes_and_totals import calculate_taxes_and_totals
 
-class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
-    def apply_discount_amount(self):
-        if self.doc.discount_amount:
-            if not self.doc.apply_discount_on:
-                frappe.throw(_("Please select Apply Discount On"))
+from erpnext_china.erpnext_china.overrides.controllers.taxes_and_totals import custom_calculate_taxes_and_totals
 
-            self.doc.base_discount_amount = flt(
-                self.doc.discount_amount * self.doc.conversion_rate,
-                self.doc.precision("base_discount_amount"),
-            )
-
-            if self.doc.apply_discount_on == "Grand Total" and self.doc.get("is_cash_or_non_trade_discount"):
-                self.discount_amount_applied = True
-                return
-
-            total_for_discount_amount = self.get_total_for_discount_amount()
-            net_total = 0
-            expected_net_total = 0
-
-            if total_for_discount_amount:
-                # calculate item amount after Discount Amount
-                for item in self._items:
-                    # 重写折扣金额的分配方式，因为我们已经指定了优惠后金额，无需按比例进行分配
-                    grand_total_fraction_for_current_item = self.doc.taxes[0].grand_total_fraction_for_current_item if self.doc.taxes else 1
-                    distributed_amount = flt((item.amount - item.custom_after_distinct__amount_request) / grand_total_fraction_for_current_item)
-
-                    adjusted_net_amount = item.net_amount - distributed_amount
-                    expected_net_total += adjusted_net_amount
-                    item.net_amount = flt(adjusted_net_amount, item.precision("net_amount"))
-                    item.distributed_discount_amount = flt(
-                        distributed_amount, item.precision("distributed_discount_amount")
-                    )
-                    net_total += item.net_amount
-
-                    # discount amount rounding adjustment
-                    if rounding_difference := flt(
-                        expected_net_total - net_total, self.doc.precision("net_total")
-                    ):
-                        item.net_amount = flt(
-                            item.net_amount + rounding_difference, item.precision("net_amount")
-                        )
-                        item.distributed_discount_amount = flt(
-                            distributed_amount + rounding_difference,
-                            item.precision("distributed_discount_amount"),
-                        )
-                        net_total += rounding_difference
-
-                    item.net_rate = (
-                        flt(item.net_amount / item.qty, item.precision("net_rate")) if item.qty else 0
-                    )
-
-                    self._set_in_company_currency(item, ["net_rate", "net_amount"])
-
-                self.discount_amount_applied = True
-                self._calculate()
-        else:
-            self.doc.base_discount_amount = 0
 
 class CustomSalesOrder(SalesOrder):
 
@@ -484,21 +430,22 @@ def make_internal_purchase_order(doc,method=None):
         frappe.set_user(current_user)
 
 def validate_po_item_price(po,so):
-    total_discount = 0
-    for soi in so.items:
-        for poi in po.items:
-            if poi.sales_order_item == soi.name:
-                if poi.amount != soi.custom_after_distinct__amount_request:
-                    total_discount += soi.amount - soi.custom_after_distinct__amount_request
-                poi.update({
-                    'rate':soi.rate,
-                    'amount':soi.amount,
-                })
-
-    if total_discount > 0:
-        po.apply_discount_on = so.apply_discount_on
-        po.discount_amount = total_discount
-
+    for item in po.items:
+        if item.sales_order and item.sales_order_item:
+            so_item = frappe.db.get_value(
+                "Sales Order Item", 
+                item.sales_order_item, 
+                ["rate", "amount", "price_list_rate"], 
+                as_dict=True
+            )
+            item.update({
+                'rate':so_item.rate,
+                'amount':so_item.amount,
+                'price_list_rate': so_item.price_list_rate
+            })
+    po.apply_discount_on = so.apply_discount_on
+    po.discount_amount = so.discount_amount
+    
 @frappe.whitelist()
 def set_custom_important_reminders(docname, note):
     doc = frappe.get_doc('Sales Order', docname)
