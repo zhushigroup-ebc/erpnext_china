@@ -3,7 +3,7 @@ import json
 import frappe
 from frappe import _
 import frappe.utils
-from frappe.utils import cint, getdate
+from frappe.utils import cint, getdate, flt
 
 from erpnext.selling.doctype.sales_order.sales_order import SalesOrder
 from erpnext.selling.doctype.sales_order.sales_order import make_purchase_order_for_default_supplier
@@ -423,26 +423,37 @@ def make_internal_purchase_order(doc,method=None):
         frappe.set_user("Administrator")
         purchase_orders = make_purchase_order_for_default_supplier(doc.name, items)
         for po in purchase_orders:
-            validate_po_item_price(po,doc)
+            custom_set_missing_values(po, doc)
             po.save()
-            po.db_set('owner',doc.owner)
+            po.db_set('owner', doc.owner)
             po.submit()
         frappe.set_user(current_user)
 
-def validate_po_item_price(po,so):
+def custom_set_missing_values(po, so):
+    default_cost_center = frappe.db.get_value('Company', po.company, 'cost_center')
     for item in po.items:
         if item.sales_order and item.sales_order_item:
             so_item = frappe.db.get_value(
                 "Sales Order Item", 
                 item.sales_order_item, 
-                ["rate", "amount", "price_list_rate"], 
+                ["rate", "amount", "price_list_rate", "custom_after_distinct__amount_request", "qty"], 
                 as_dict=True
             )
             item.update({
                 'rate':so_item.rate,
-                'amount':so_item.amount,
-                'price_list_rate': so_item.price_list_rate
+                'amount': flt(item.qty * so_item.amount / so_item.qty, item.precision("amount")),
+                'price_list_rate': so_item.price_list_rate,
+                'cost_center': default_cost_center,
+                'custom_after_distinct_amount_request': flt(item.qty * so_item.custom_after_distinct__amount_request / so_item.qty, item.precision("amount"))
             })
+    if so.taxes_and_charges:
+        tax_category = frappe.db.get_value("Sales Taxes and Charges Template", so.taxes_and_charges, "tax_category")
+        taxes_and_charges = frappe.db.get_list("Sales Taxes and Charges Template", filters={
+            "company": po.company,
+            "tax_category": tax_category
+        })
+        if taxes_and_charges and len(taxes_and_charges) > 0:
+            po.taxes_and_charges = taxes_and_charges[0]
     po.apply_discount_on = so.apply_discount_on
     po.discount_amount = so.discount_amount
     

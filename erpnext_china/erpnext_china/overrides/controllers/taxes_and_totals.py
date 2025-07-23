@@ -41,12 +41,10 @@ class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
                             )
                             
                             distributed_amount = flt(item.qty * po_item.distributed_discount_amount / po_item.qty, item_precision)
-                            # 同时给内部订单设置上每行的优惠后金额用于计算折后单价
-                            item.custom_after_distinct__amount_request = flt(item.amount - distributed_amount, item.precision("amount"))
                         # 如果是原始订单行，可以直接计算
                         else:
                             grand_total_fraction_for_current_item = self.doc.taxes[0].grand_total_fraction_for_current_item if self.doc.taxes else 1
-                            distributed_amount = flt((item.amount - item.custom_after_distinct__amount_request) / grand_total_fraction_for_current_item)
+                            distributed_amount = flt((item.amount - item.custom_after_distinct__amount_request) / grand_total_fraction_for_current_item, item_precision)
                     elif self.doc.doctype == "Delivery Note":
                         if item.against_sales_order and item.so_detail:
                             so_item = frappe.db.get_value(
@@ -62,11 +60,10 @@ class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
                             so_item = frappe.db.get_value(
                                 "Sales Order Item", 
                                 item.sales_order_item, 
-                                ["qty", "amount", "custom_after_distinct__amount_request"], 
+                                ["qty", "distributed_discount_amount"], 
                                 as_dict=True
                             )
-                            no_tax_distributed_discount_amount = so_item.amount - so_item.custom_after_distinct__amount_request
-                            distributed_amount = flt(item.qty * no_tax_distributed_discount_amount / so_item.qty, item_precision)
+                            distributed_amount = flt(item.qty * so_item.distributed_discount_amount / so_item.qty, item_precision)
                     
                     if distributed_amount is None:
                         distributed_amount = (
