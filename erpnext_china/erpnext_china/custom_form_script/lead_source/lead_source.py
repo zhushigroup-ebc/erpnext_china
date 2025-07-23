@@ -10,7 +10,7 @@ def update_sorted_index(**kwargs):
 		for i in sorted_index:
 			doc = frappe.get_doc("Lead Source", i.get('name'))
 			doc.custom_sorted_index = int(i.get('index'))
-			doc.save(ignore_permissions=True)
+			doc.save()
 
 
 @frappe.whitelist()
