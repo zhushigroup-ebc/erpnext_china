@@ -45,7 +45,7 @@ def make_internal_sales_order(doc, method):
 			frappe.log_error(_('Make Inter Company Sales Order Failed'), frappe.get_traceback())
 			frappe.set_user(current_user)
 			frappe.msgprint(msg,alert=1)
-			return
+			raise e
 
 		role_permissions = get_role_permissions(frappe.get_meta(sales_order.doctype), current_user)
 		add_docshare(

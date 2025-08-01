@@ -448,10 +448,12 @@ def custom_set_missing_values(po, so):
             })
     if so.taxes_and_charges:
         tax_category = frappe.db.get_value("Sales Taxes and Charges Template", so.taxes_and_charges, "tax_category")
-        taxes_and_charges = frappe.db.get_list("Sales Taxes and Charges Template", filters={
-            "company": po.company,
-            "tax_category": tax_category
-        })
+        taxes_and_charges = frappe.db.get_all(
+            "Sales Taxes and Charges Template", 
+            filters={
+                "company": po.company,
+                "tax_category": tax_category
+            }, pluck="name")
         if taxes_and_charges and len(taxes_and_charges) > 0:
             po.taxes_and_charges = taxes_and_charges[0]
     po.apply_discount_on = so.apply_discount_on
