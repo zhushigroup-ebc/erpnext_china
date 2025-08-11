@@ -1,8 +1,12 @@
+import json
+
 import frappe
 from frappe import _
+import frappe.utils
+from frappe.utils import cint, getdate, flt
+
 from erpnext.selling.doctype.sales_order.sales_order import SalesOrder
 from erpnext.selling.doctype.sales_order.sales_order import make_purchase_order_for_default_supplier
-import json
 from erpnext.accounts.doctype.payment_entry.payment_entry import (
     set_party_type,
     set_party_account,
@@ -12,9 +16,10 @@ from erpnext.accounts.doctype.payment_entry.payment_entry import (
     set_grand_total_and_outstanding_amount,
     set_payment_type
 )
-import frappe.utils
 from erpnext.selling.doctype.sales_order.sales_order import WarehouseRequired
-from frappe.utils import cint, getdate
+
+from erpnext_china.erpnext_china.overrides.controllers.taxes_and_totals import custom_calculate_taxes_and_totals
+
 
 class CustomSalesOrder(SalesOrder):
 
@@ -153,18 +158,7 @@ class CustomSalesOrder(SalesOrder):
                 self.custom_city = address.city
                 self.custom_check_area = self.set_check_area(address.state,address.city,box_count)
 
-    def set_discount_amount_custom_after_distinct__amount_request(self):
-        discount_amount = 0
-        # process custom_after_distinct__amount_request for internal sales order
-        if self.is_internal_customer and self.custom_original_sales_order:
-            for item in self.items:
-                poi_name = item.purchase_order_item
-                soi_name = frappe.db.get_value("Purchase Order Item", poi_name, 'sales_order_item')
-                item.custom_after_distinct__amount_request = frappe.db.get_value("Sales Order Item", soi_name, 'custom_after_distinct__amount_request')
 
-        for d in self.get("items"):
-            discount_amount = discount_amount + (d.amount - d.custom_after_distinct__amount_request)
-        self.discount_amount = discount_amount
     def check_customer_and_internal_supplier(self):
         for item in self.items:
             if item.supplier in [self.customer_name, self.customer]:
@@ -178,7 +172,6 @@ class CustomSalesOrder(SalesOrder):
         self.set_employee_and_department()
         self.set_freight()
         self.set_state_and_city()
-        self.set_discount_amount_custom_after_distinct__amount_request()
         self.check_customer_and_internal_supplier()
 
     def set_address_name(self):
@@ -192,8 +185,6 @@ class CustomSalesOrder(SalesOrder):
                     self.shipping_address_name = shipping_address_name
                     self.shipping_address = shipping_address
 
-    def after_save(self):
-        self.set_discount_amount_custom_after_distinct__amount_request()
 
     def clear_drop_ship(self):
         for d in self.get("items"):
@@ -228,6 +219,19 @@ class CustomSalesOrder(SalesOrder):
         super().validate()
         self.validate_taxes_and_charges_of_company()
         self.validate_user_can_sell_item()
+
+    def calculate_taxes_and_totals(self):
+        
+        custom_calculate_taxes_and_totals(self)
+
+        if self.doctype in (
+            "Sales Order",
+            "Delivery Note",
+            "Sales Invoice",
+            "POS Invoice",
+        ):
+            self.calculate_commission()
+            self.calculate_contribution()
 
     def validate_delivery_date(self):
         if self.order_type == "Sales" and not self.skip_delivery_note:
@@ -419,28 +423,42 @@ def make_internal_purchase_order(doc,method=None):
         frappe.set_user("Administrator")
         purchase_orders = make_purchase_order_for_default_supplier(doc.name, items)
         for po in purchase_orders:
-            validate_po_item_price(po,doc)
+            custom_set_missing_values(po, doc)
             po.save()
-            po.db_set('owner',doc.owner)
+            po.db_set('owner', doc.owner)
             po.submit()
         frappe.set_user(current_user)
 
-def validate_po_item_price(po,so):
-    total_discount = 0
-    for soi in so.items:
-        for poi in po.items:
-            if poi.sales_order_item == soi.name:
-                if poi.amount != soi.custom_after_distinct__amount_request:
-                    total_discount += soi.amount - soi.custom_after_distinct__amount_request
-                poi.update({
-                    'rate':soi.rate,
-                    'amount':soi.amount,
-                })
-
-    if total_discount > 0:
-        po.apply_discount_on = so.apply_discount_on
-        po.discount_amount = total_discount
-
+def custom_set_missing_values(po, so):
+    default_cost_center = frappe.db.get_value('Company', po.company, 'cost_center')
+    for item in po.items:
+        if item.sales_order and item.sales_order_item:
+            so_item = frappe.db.get_value(
+                "Sales Order Item", 
+                item.sales_order_item, 
+                ["rate", "amount", "price_list_rate", "custom_after_distinct__amount_request", "qty"], 
+                as_dict=True
+            )
+            item.update({
+                'rate':so_item.rate,
+                'amount': flt(item.qty * so_item.amount / so_item.qty, item.precision("amount")),
+                'price_list_rate': so_item.price_list_rate,
+                'cost_center': default_cost_center,
+                'custom_after_distinct_amount_request': flt(item.qty * so_item.custom_after_distinct__amount_request / so_item.qty, item.precision("amount"))
+            })
+    if so.taxes_and_charges:
+        tax_category = frappe.db.get_value("Sales Taxes and Charges Template", so.taxes_and_charges, "tax_category")
+        taxes_and_charges = frappe.db.get_all(
+            "Sales Taxes and Charges Template", 
+            filters={
+                "company": po.company,
+                "tax_category": tax_category
+            }, pluck="name")
+        if taxes_and_charges and len(taxes_and_charges) > 0:
+            po.taxes_and_charges = taxes_and_charges[0]
+    po.apply_discount_on = so.apply_discount_on
+    po.discount_amount = so.discount_amount
+    
 @frappe.whitelist()
 def set_custom_important_reminders(docname, note):
     doc = frappe.get_doc('Sales Order', docname)
@@ -498,17 +516,17 @@ def matching_payment_entries(docname,payment_entries):
                     'party': doc.customer,
                 })
                 pe_doc.append(
-					"references",
-					{
-						"reference_doctype": doc.doctype,
-						"reference_name": doc.name,
-						"bill_no": doc.get("bill_no"),
-						"due_date": doc.get("due_date"),
-						"total_amount": grand_total,
-						"outstanding_amount": unallocated_amount,
-						"allocated_amount": pe_doc.paid_amount,
-					},
-				)
+                    "references",
+                    {
+                        "reference_doctype": doc.doctype,
+                        "reference_name": doc.name,
+                        "bill_no": doc.get("bill_no"),
+                        "due_date": doc.get("due_date"),
+                        "total_amount": grand_total,
+                        "outstanding_amount": unallocated_amount,
+                        "allocated_amount": pe_doc.paid_amount,
+                    },
+                )
                 try:
                     pe_doc.save().submit()
                     unallocated_amount -= pe_doc.paid_amount
@@ -531,17 +549,17 @@ def matching_payment_entries(docname,payment_entries):
                     'manual_split':1
                 })
                 pe_doc.append(
-					"references",
-					{
-						"reference_doctype": doc.doctype,
-						"reference_name": doc.name,
-						"bill_no": doc.get("bill_no"),
-						"due_date": doc.get("due_date"),
-						"total_amount": grand_total,
-						"outstanding_amount": unallocated_amount,
-						"allocated_amount": unallocated_amount,
-					},
-				)
+                    "references",
+                    {
+                        "reference_doctype": doc.doctype,
+                        "reference_name": doc.name,
+                        "bill_no": doc.get("bill_no"),
+                        "due_date": doc.get("due_date"),
+                        "total_amount": grand_total,
+                        "outstanding_amount": unallocated_amount,
+                        "allocated_amount": unallocated_amount,
+                    },
+                )
                 try:
                     pe_doc.save().submit()
                     unallocated_amount -= pe_doc.paid_amount
