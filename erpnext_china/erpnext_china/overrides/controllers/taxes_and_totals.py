@@ -43,7 +43,10 @@ class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
                             distributed_amount = flt(item.qty * po_item.distributed_discount_amount / po_item.qty, item_precision)
                         # 如果是原始订单行，可以直接计算
                         else:
-                            grand_total_fraction_for_current_item = self.doc.taxes[0].grand_total_fraction_for_current_item if self.doc.taxes else 1
+                            if self.doc.taxes:
+                                grand_total_fraction_for_current_item = self.doc.taxes[0].grand_total_fraction_for_current_item or 1
+                            else:
+                                grand_total_fraction_for_current_item = 1
                             distributed_amount = flt((item.amount - item.custom_after_distinct__amount_request) / grand_total_fraction_for_current_item, item_precision)
                     elif self.doc.doctype == "Delivery Note":
                         if item.against_sales_order and item.so_detail:
