@@ -39,6 +39,13 @@ scheduler_events = {
         # "*/30 * * * *": [
 		# 	"erpnext_china.utils.timed_tasks.task_update_wecom_staff",
 		# ],
+    	"0 */6 * * * *": [
+			"erpnext_china.erpnext_china.doctype.lead_domain_for_local.lead_domain_for_local.scheduled_refresh_all_tokens"
+		],        
+       # 本地推线索定时同步（每10分钟执行一次增量同步）
+        "*/10 * * * *": [
+            "erpnext_china.erpnext_china.doctype.lead_domain_for_local.lead_domain_for_local.scheduled_sync_all_local_accounts"
+        ],
 	},
 }
 
