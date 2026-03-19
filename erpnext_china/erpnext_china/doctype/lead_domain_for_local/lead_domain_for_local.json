@@ -1,0 +1,128 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:local_account_id",
+ "creation": "2026-01-25 10:35:32.746565",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "local_account_id",
+  "account_name",
+  "access_token",
+  "refresh_token",
+  "token_expires_at",
+  "auto_allocation",
+  "product_category",
+  "column_break_zsxv",
+  "employee",
+  "last_sync_time",
+  "sync_days"
+ ],
+ "fields": [
+  {
+   "description": "\u672c\u5730\u63a8\u6295\u653e\u8d26\u6237ID\uff08local_account_id\uff09",
+   "fieldname": "local_account_id",
+   "fieldtype": "Data",
+   "label": "Local Account ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "description": "\u8d26\u6237\u540d\u79f0\uff0c\u65b9\u4fbf\u8bc6\u522b",
+   "fieldname": "account_name",
+   "fieldtype": "Data",
+   "label": "Account Name",
+   "reqd": 1
+  },
+  {
+   "description": "\u5de8\u91cf\u5f00\u653e\u5e73\u53f0\u7684 Access Token\uff08\u901a\u8fc7OAuth\u6388\u6743\u81ea\u52a8\u83b7\u53d6\u6216\u624b\u52a8\u586b\u5199\uff09",
+   "fieldname": "access_token",
+   "fieldtype": "Password",
+   "label": "Access Token"
+  },
+  {
+   "description": "\u7528\u4e8e\u5237\u65b0 Access Token",
+   "fieldname": "refresh_token",
+   "fieldtype": "Password",
+   "label": "Refresh Token"
+  },
+  {
+   "description": "Access Token \u8fc7\u671f\u65f6\u95f4",
+   "fieldname": "token_expires_at",
+   "fieldtype": "Datetime",
+   "label": "Token Expires At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zsxv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "\u5173\u8054\u7684\u5458\u5de5",
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "description": "\u662f\u5426\u81ea\u52a8\u5206\u914d\u7ebf\u7d22",
+   "fieldname": "auto_allocation",
+   "fieldtype": "Check",
+   "label": "Auto Allocation"
+  },
+  {
+   "fieldname": "product_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Product Category",
+   "mandatory_depends_on": "eval:doc.auto_allocation == true",
+   "options": "Product Category",
+   "reqd": 1
+  },
+  {
+   "description": "\u4e0a\u6b21\u540c\u6b65\u65f6\u95f4",
+   "fieldname": "last_sync_time",
+   "fieldtype": "Datetime",
+   "label": "Last Sync Time",
+   "read_only": 1
+  },
+  {
+   "default": "7",
+   "description": "\u540c\u6b65\u591a\u5c11\u5929\u5185\u7684\u7ebf\u7d22\uff0c\u9ed8\u8ba47\u5929",
+   "fieldname": "sync_days",
+   "fieldtype": "Int",
+   "label": "Sync Days"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-25 20:50:07.610346",
+ "modified_by": "Administrator",
+ "module": "ERPNext China",
+ "name": "Lead Domain for Local",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "account_name",
+ "track_changes": 1
+}
