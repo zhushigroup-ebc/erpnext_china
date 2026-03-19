@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "Format:ORIGIN-LEAD-{YYYY}-{MM}-{DD}-{######}",
- "creation": "2026-01-25 19:30:43.642366",
+ "creation": "2024-06-05 17:40:10.371532",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -12,7 +12,6 @@
   "username",
   "employee_baidu_account",
   "employee_douyin_account",
-  "employee_local_account",
   "product_category",
   "source",
   "clue_id",
@@ -128,33 +127,7 @@
   "form_remark",
   "remark_dict",
   "column_break_oklx",
-  "mid_info",
-  "from_local_tab",
-  "local_section_basic",
-  "action_type",
-  "allocation_status",
-  "effective_state",
-  "effective_state_name",
-  "column_break_local_1",
-  "follow_state_name",
-  "leads_page",
-  "order_status",
-  "local_section_account",
-  "follow_life_account_id",
-  "follow_life_account_name",
-  "follow_life_account_type",
-  "column_break_local_2",
-  "clue_owner_name",
-  "content_id",
-  "tool_id",
-  "local_section_order",
-  "order_id",
-  "qcpx_ticket_status",
-  "column_break_local_3",
-  "qcpx_ticket_info",
-  "local_section_tags",
-  "system_tags",
-  "tags"
+  "mid_info"
  ],
  "fields": [
   {
@@ -444,7 +417,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Source",
-   "options": "Baidu\nDouyin\nLocal",
+   "options": "Baidu\nDouyin",
    "reqd": 1
   },
   {
@@ -471,12 +444,6 @@
    "fieldname": "from_douyin_tab",
    "fieldtype": "Tab Break",
    "label": "From Douyin"
-  },
-  {
-   "depends_on": "eval:doc.source == 'Local'",
-   "fieldname": "from_local_tab",
-   "fieldtype": "Tab Break",
-   "label": "From Local"
   },
   {
    "fieldname": "basic_section",
@@ -756,14 +723,6 @@
    "permlevel": 9
   },
   {
-   "depends_on": "eval:doc.source == 'Local'",
-   "fieldname": "employee_local_account",
-   "fieldtype": "Link",
-   "label": "Employee Local Account",
-   "options": "Lead Domain for Local",
-   "permlevel": 9
-  },
-  {
    "depends_on": "eval:doc.source == 'Douyin'",
    "fieldname": "employee_douyin_account",
    "fieldtype": "Link",
@@ -801,152 +760,11 @@
    "fieldtype": "Data",
    "label": "Auth Code",
    "permlevel": 9
-  },
-  {
-   "fieldname": "local_section_basic",
-   "fieldtype": "Section Break",
-   "label": "Local Basic Info"
-  },
-  {
-   "description": "\u884c\u4e3a\u7c7b\u578b\uff08\u76f4\u64ad/\u77ed\u89c6\u9891/\u95e8\u5e97/\u641c\u7d22\uff09",
-   "fieldname": "action_type",
-   "fieldtype": "Data",
-   "label": "Action Type"
-  },
-  {
-   "description": "\u5206\u914d\u72b6\u6001",
-   "fieldname": "allocation_status",
-   "fieldtype": "Data",
-   "label": "Allocation Status"
-  },
-  {
-   "description": "\u6709\u6548\u72b6\u6001\u7801",
-   "fieldname": "effective_state",
-   "fieldtype": "Int",
-   "label": "Effective State"
-  },
-  {
-   "description": "\u6709\u6548\u72b6\u6001\u540d\u79f0",
-   "fieldname": "effective_state_name",
-   "fieldtype": "Data",
-   "label": "Effective State Name"
-  },
-  {
-   "fieldname": "column_break_local_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "description": "\u8ddf\u8fdb\u72b6\u6001\u540d\u79f0",
-   "fieldname": "follow_state_name",
-   "fieldtype": "Data",
-   "label": "Follow State Name"
-  },
-  {
-   "description": "\u7ebf\u7d22\u9875\u9762\u6765\u6e90",
-   "fieldname": "leads_page",
-   "fieldtype": "Data",
-   "label": "Leads Page"
-  },
-  {
-   "description": "\u8ba2\u5355\u72b6\u6001",
-   "fieldname": "order_status",
-   "fieldtype": "Data",
-   "label": "Order Status"
-  },
-  {
-   "fieldname": "local_section_account",
-   "fieldtype": "Section Break",
-   "label": "Life Account Info"
-  },
-  {
-   "description": "\u5173\u6ce8\u7684\u751f\u6d3b\u53f7ID",
-   "fieldname": "follow_life_account_id",
-   "fieldtype": "Data",
-   "label": "Follow Life Account ID"
-  },
-  {
-   "description": "\u5173\u6ce8\u7684\u751f\u6d3b\u53f7\u540d\u79f0",
-   "fieldname": "follow_life_account_name",
-   "fieldtype": "Data",
-   "label": "Follow Life Account Name"
-  },
-  {
-   "description": "\u5173\u6ce8\u7684\u751f\u6d3b\u53f7\u7c7b\u578b",
-   "fieldname": "follow_life_account_type",
-   "fieldtype": "Data",
-   "label": "Follow Life Account Type"
-  },
-  {
-   "fieldname": "column_break_local_2",
-   "fieldtype": "Column Break"
-  },
-  {
-   "description": "\u7ebf\u7d22\u8d1f\u8d23\u4eba\u540d\u79f0",
-   "fieldname": "clue_owner_name",
-   "fieldtype": "Data",
-   "label": "Clue Owner Name"
-  },
-  {
-   "description": "\u5185\u5bb9ID",
-   "fieldname": "content_id",
-   "fieldtype": "Data",
-   "label": "Content ID"
-  },
-  {
-   "description": "\u5de5\u5177ID",
-   "fieldname": "tool_id",
-   "fieldtype": "Data",
-   "label": "Tool ID"
-  },
-  {
-   "fieldname": "local_section_order",
-   "fieldtype": "Section Break",
-   "label": "Order & Ticket Info"
-  },
-  {
-   "description": "\u8ba2\u5355ID",
-   "fieldname": "order_id",
-   "fieldtype": "Data",
-   "label": "Order ID"
-  },
-  {
-   "description": "\u5238\u72b6\u6001",
-   "fieldname": "qcpx_ticket_status",
-   "fieldtype": "Data",
-   "label": "Ticket Status"
-  },
-  {
-   "fieldname": "column_break_local_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "description": "\u5238\u8be6\u7ec6\u4fe1\u606f",
-   "fieldname": "qcpx_ticket_info",
-   "fieldtype": "Text",
-   "label": "Ticket Info"
-  },
-  {
-   "fieldname": "local_section_tags",
-   "fieldtype": "Section Break",
-   "label": "Tags"
-  },
-  {
-   "description": "\u7cfb\u7edf\u6807\u7b7e",
-   "fieldname": "system_tags",
-   "fieldtype": "Text",
-   "label": "System Tags"
-  },
-  {
-   "description": "\u6807\u7b7e",
-   "fieldname": "tags",
-   "fieldtype": "Text",
-   "label": "Tags"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-27 13:38:34.371241",
+ "modified": "2024-11-19 15:33:12.576620",
  "modified_by": "Administrator",
  "module": "ERPNext China",
  "name": "Original Leads",
@@ -966,8 +784,6 @@
    "write": 1
   }
  ],
- "row_format": "Dynamic",
- "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
