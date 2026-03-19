@@ -52,9 +52,9 @@ def format_flow_channel_name(name: str, prefix: str):
 def get_username_in_form_detail(kwargs: dict, source: str):
 	"""
 	提取用户称呼，默认是线索的ID
-	:param source: baidu | douyin | local
+	:param source: baidu | douyin
 	"""
-	if source not in ['baidu', 'douyin','local']:
+	if source not in ['baidu', 'douyin']:
 		return "未知"
 	
 	if source == 'baidu':
@@ -77,7 +77,7 @@ def get_username_in_form_detail(kwargs: dict, source: str):
 def get_or_insert_crm_lead(
 		lead_name, source, phone:str, mobile:str, wx:str, 
 		city, state, original_lead_name, commit_time, keyword='', search_word='', product_category='',
-		auto_allocation=False, bd_account=None, dy_account=None,local_account=None,  country='China'):
+		auto_allocation=False, bd_account=None, dy_account=None, country='China'):
 	"""
 	如果存在返回doc，并添加评论有新的原始线索关联过来了，不存在则创建
 
@@ -138,7 +138,6 @@ def get_or_insert_crm_lead(
 			'territory': territory,
 			'custom_employee_baidu_account': bd_account,
 			'custom_employee_douyin_account': dy_account,
-   			'custom_employee_local_account': local_account,
 			'custom_original_lead_name': original_lead_name,
 			'lead_owner': '', # 这个给个默认线索负责人为空
 			'custom_lead_owner_employee': '',
