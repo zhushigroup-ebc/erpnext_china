@@ -287,24 +287,7 @@ class CustomSalesOrder(SalesOrder):
         
         # 判断订单内产品是否由样品库发货，sample_warehouse为True时，由样品库发货
         uom_total = 0
-        sample_warehouse = True
-        for d in self.get("items"):
-            if d.uom in ['盒','瓶','袋','套','贴','片','支','卷','个','包','只','副']:
-                uom_total = uom_total + d.qty
-            if '箱' in d.uom:
-                sample_warehouse = False
-            if d.item_code in ['STO-ITEM-2024-00844', 'STO-ITEM-2025-00040','STO-ITEM-2024-00855']:
-                # 红石榴套盒、中频治疗仪、血氧仪不走样品库
-                sample_warehouse = False
-            item_group = frappe.db.get_all('Item', filters = {'name' : d.item_code },fields = 'item_group')[0]['item_group']
-            while item_group !='所有物料群组' and item_group not in ['有源设备'] :
-                item_group = frappe.db.get_all('Item Group', filters = {'name':item_group},fields = 'parent_item_group')[0]['parent_item_group']
-        if uom_total >30:
-            sample_warehouse = False
-        if item_group == '有源设备':
-            # 有源不从样品库发放
-            sample_warehouse = False
-
+        sample_warehouse = False
 
         for d in self.get("items"):
             if (
