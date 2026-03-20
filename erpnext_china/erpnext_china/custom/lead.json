@@ -525,7 +525,7 @@
    "columns": 0,
    "creation": "2026-03-20 22:10:52.086364",
    "default": null,
-   "depends_on": "eval:doc.custom_original_lead_name && doc.custom_employee_douyin_account",
+   "depends_on": "eval:doc.custom_original_lead_name && doc.custom_employee_local_account",
    "description": null,
    "docstatus": 0,
    "dt": "Lead",
