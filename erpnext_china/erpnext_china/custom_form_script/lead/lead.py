@@ -182,6 +182,7 @@ class CustomLead(Lead):
 		if not self.custom_original_lead_name:
 			self.custom_employee_baidu_account = ''
 			self.custom_employee_douyin_account = ''
+			self.custom_employee_local_account = ''
 
 		if self.has_value_changed("lead_owner"):
 			lead_tools.set_last_lead_owner(self)
