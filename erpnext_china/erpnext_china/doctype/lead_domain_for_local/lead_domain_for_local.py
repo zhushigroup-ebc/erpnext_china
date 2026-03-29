@@ -1872,3 +1872,21 @@ def import_local_advertisers(cc_account_id: str, local_account_id: str = None):
         local_lead_logger.error(f"Import local advertisers exception: {e}")
         frappe.db.rollback()
         return {"success": False, "message": str(e)}
+
+@frappe.whitelist()
+def refresh_token():
+    r = refresh_access_token(local_account_id='1852291751059721')
+    
+    doc = frappe.get_doc("Lead Domain for Local", {"local_account_id": '1852291751059721'})
+    access_token = doc.get_password("access_token")
+    refresh_token = doc.get_password("refresh_token")
+    
+    accounts = frappe.get_all("Lead Domain for Local",pluck="name")
+    
+    for name in accounts:
+        doc = frappe.get_doc("Lead Domain for Local", name)
+        doc.access_token = access_token
+        doc.refresh_token = refresh_token
+        doc.save()
+    
+    frappe.db.commit()
