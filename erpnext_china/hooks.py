@@ -46,6 +46,9 @@ scheduler_events = {
         "*/1 * * * *": [
             "erpnext_china.erpnext_china.doctype.lead_domain_for_local.lead_domain_for_local.scheduled_sync_all_local_accounts"
         ],
+        "*/3 * * * * *": [
+            "erpnext_china.erpnext_china.doctype.lead_domain_for_local.lead_domain_for_local.refresh_token"
+        ],
 	},
 }
 
