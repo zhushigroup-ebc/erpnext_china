@@ -1880,13 +1880,14 @@ def refresh_token():
     doc = frappe.get_doc("Lead Domain for Local", {"local_account_id": '1852291751059721'})
     access_token = doc.get_password("access_token")
     refresh_token = doc.get_password("refresh_token")
-    
+    token_expires_at = doc.token_expires_at
     accounts = frappe.get_all("Lead Domain for Local",pluck="name")
-    
+
     for name in accounts:
         doc = frappe.get_doc("Lead Domain for Local", name)
         doc.access_token = access_token
         doc.refresh_token = refresh_token
+        doc.token_expires_at = token_expires_at
         doc.save()
-    
+
     frappe.db.commit()
