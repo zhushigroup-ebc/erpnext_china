@@ -9295,3 +9295,4 @@ SP Type,假勤
 SP Duration,假勤时长
 SP Time Type,假勤时长单位
 Local,本地推,
+Lead Auto Allocation By Creator, 对线索自动分配（按线索创建人）
