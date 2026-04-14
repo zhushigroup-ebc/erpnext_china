@@ -8,9 +8,6 @@ def lead_before_save_handle(doc):
 
 	if not created_lead_by_sale(doc):
 		old_doc = doc.get_doc_before_save()
-		auto_creators = frappe.get_all("Lead Auto Allocation By Creator",pluck='user_id')
-		if doc.owner in auto_creators:
-			doc.custom_auto_allocation = 1
 		auto_allocation = doc.custom_auto_allocation
 		lead_owner_employee = doc.custom_lead_owner_employee
 		
