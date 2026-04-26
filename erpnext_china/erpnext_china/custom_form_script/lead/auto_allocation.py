@@ -5,16 +5,9 @@ import frappe.utils
 
 
 def lead_before_save_handle(doc):
-
 	if not created_lead_by_sale(doc):
 		old_doc = doc.get_doc_before_save()
-		auto_creators = frappe.get_all("Lead Auto Allocation By Creator",pluck='user_id')
-		_s =  doc.modified - doc.creation
-		if (doc.owner in auto_creators) and  (_s.seconds < 30):
-			doc.custom_auto_allocation = 1
-		auto_allocation = doc.custom_auto_allocation
 		lead_owner_employee = doc.custom_lead_owner_employee
-		
 		# 保存前有线索负责员工，说明是手动录入或修改
 		if lead_owner_employee:
 			if doc.has_value_changed("custom_lead_owner_employee"):
@@ -34,7 +27,9 @@ def lead_before_save_handle(doc):
 						item_doc.save(ignore_permissions=True)
 					to_private(doc)
 		else:
-			if auto_allocation:
+			auto_creators = frappe.get_all("Lead Auto Allocation By Creator",pluck='user_id')
+			
+			if (auto_allocation) or (doc.owner in auto_creators):
 				doc._custom_comment = '自动分配'
 				auto_allocate(doc)
 			else:
