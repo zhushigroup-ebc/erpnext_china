@@ -39,7 +39,6 @@ def lead_before_save_handle(doc):
 						item_doc.save(ignore_permissions=True)
 					to_private(doc)
 		else:
-			frappe.msgprint("当前分配规则下没有可分配员工！将自动分配给创建员工")
 			if (auto_allocation) or ((doc.owner in auto_creators)  and _s < 60):
 				doc._custom_comment = '自动分配'
 				auto_allocate(doc)
