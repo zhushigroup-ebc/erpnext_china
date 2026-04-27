@@ -6,7 +6,16 @@ import frappe.utils
 
 def lead_before_save_handle(doc):
 	auto_creators = frappe.get_all("Lead Auto Allocation By Creator",pluck='user_id',ignore_permissions=True)
-
+	try:
+		try:
+			_s =  doc.modified - doc.creation
+			_s = _s.total_seconds()
+		except:
+			_s =  datetime.strptime(doc.modified, '%Y-%m-%d %H:%M:%S.%f') - datetime.strptime(doc.creation, '%Y-%m-%d %H:%M:%S.%f')
+			_s = _s.total_seconds()
+	except:
+		_s = 999
+	
 	if not created_lead_by_sale(doc):
 		old_doc = doc.get_doc_before_save()
 		auto_allocation = doc.custom_auto_allocation
@@ -30,7 +39,8 @@ def lead_before_save_handle(doc):
 						item_doc.save(ignore_permissions=True)
 					to_private(doc)
 		else:
-			if (auto_allocation) or (doc.owner in auto_creators):
+			frappe.msgprint("当前分配规则下没有可分配员工！将自动分配给创建员工")
+			if (auto_allocation) or ((doc.owner in auto_creators)  and _s < 60):
 				doc._custom_comment = '自动分配'
 				auto_allocate(doc)
 			else:
